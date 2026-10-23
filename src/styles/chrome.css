@@ -1,0 +1,516 @@
+/* ───────── loader */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+}
+.loader-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5%;
+  background: var(--bg);
+  transition: transform 1s cubic-bezier(0.8, 0, 0.2, 1) 0.15s;
+}
+.loader-panel.top {
+  top: 0;
+  border-bottom: 1px solid rgba(57, 211, 83, 0.25);
+}
+.loader-panel.bottom {
+  bottom: 0;
+}
+.loader.out .loader-panel.top {
+  transform: translateY(-100%);
+}
+.loader.out .loader-panel.bottom {
+  transform: translateY(100%);
+}
+.loader-term {
+  position: relative;
+  width: min(440px, calc(100vw - 32px));
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--muted);
+  transition: opacity 0.4s, transform 0.6s var(--ease);
+}
+.loader.out .loader-term {
+  opacity: 0;
+  transform: scale(0.96);
+}
+.loader-term p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.loader-term .dots {
+  flex: 1;
+  border-bottom: 1px dotted rgba(159, 176, 168, 0.3);
+  transform: translateY(-4px);
+}
+.loader-term .okv {
+  color: var(--green);
+}
+.loader-term .spin {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--dim);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.loader-bar {
+  margin-top: 18px;
+  height: 2px;
+  background: rgba(57, 211, 83, 0.12);
+  overflow: hidden;
+}
+.loader-bar i {
+  display: block;
+  height: 100%;
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green);
+  transition: width 0.6s var(--ease);
+}
+.loader-pct {
+  margin-top: 8px;
+  justify-content: flex-end;
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+/* ───────── HUD */
+.hud {
+  visibility: hidden;
+}
+.logo {
+  position: fixed;
+  z-index: 40;
+  top: 24px;
+  left: var(--gutter);
+  display: flex;
+  align-items: center;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+.logo i {
+  font-style: normal;
+  color: var(--green);
+  animation: blink 1s steps(1) infinite;
+}
+.nav {
+  position: fixed;
+  z-index: 40;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  padding: 5px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(4, 8, 7, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.nav button {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--muted);
+  transition: color 0.3s, background 0.4s var(--ease);
+}
+.nav button span {
+  font-size: 9.5px;
+  color: var(--dim);
+}
+.nav button:hover {
+  color: var(--ink);
+}
+.nav button.on {
+  background: rgba(57, 211, 83, 0.14);
+  color: var(--green);
+}
+.term-btn {
+  position: fixed;
+  z-index: 40;
+  top: 20px;
+  right: var(--gutter);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(4, 8, 7, 0.55);
+  backdrop-filter: blur(12px);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  transition: border-color 0.3s;
+}
+.term-btn:hover {
+  border-color: var(--green);
+}
+
+/* the git-graph progress rail */
+.rail {
+  position: fixed;
+  z-index: 40;
+  right: calc(var(--gutter) + 18px);
+  top: 50%;
+  height: 42vh;
+  transform: translateY(-50%);
+  width: 2px;
+}
+.rail-line {
+  position: absolute;
+  inset: 0;
+  background: rgba(57, 211, 83, 0.16);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.rail-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(var(--cyan), var(--green));
+  transform-origin: top;
+  transform: scaleY(0);
+  box-shadow: 0 0 10px var(--green);
+}
+.rail-dot {
+  position: absolute;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  border: 2px solid rgba(57, 211, 83, 0.4);
+  background: var(--bg);
+  transition: transform 0.4s var(--ease), border-color 0.3s, background 0.3s;
+}
+.rail-dot.past {
+  border-color: var(--green);
+}
+.rail-dot.on {
+  background: var(--green);
+  transform: scale(1.35);
+  box-shadow: 0 0 14px var(--green);
+}
+.rail-dot span {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translate(6px, -50%);
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.4s var(--ease);
+  pointer-events: none;
+}
+.rail-dot:hover span,
+.rail-dot.on span {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
+.rail-dot.on span {
+  color: var(--green);
+}
+
+.commit {
+  position: fixed;
+  z-index: 40;
+  left: var(--gutter);
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  color: var(--muted);
+  animation: commitIn 0.7s var(--ease);
+  pointer-events: none;
+}
+.commit-head {
+  color: #021006;
+  background: var(--cyan);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+.commit-hash {
+  color: var(--gold);
+}
+@keyframes commitIn {
+  from { opacity: 0; transform: translateY(10px); filter: blur(4px); }
+}
+/* the hero has its own footer line */
+.hud:has(.rail-dot:first-of-type.on) .commit,
+.hud:has(.rail-dot:last-of-type.on) .commit {
+  opacity: 0;
+}
+
+/* ───────── cursor */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--green);
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+}
+.cursor-ring::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(57, 211, 83, 0.55);
+  border-radius: 50%;
+  transition: transform 0.45s var(--ease), background 0.3s, border-color 0.3s;
+}
+.cursor-ring.hot::before {
+  transform: scale(1.7);
+  background: rgba(57, 211, 83, 0.1);
+  border-color: var(--green);
+}
+.cursor-ring.labelled::before {
+  transform: scale(2);
+  background: rgba(57, 211, 83, 0.92);
+}
+.cursor-ring span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #021006;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.cursor-ring.labelled span {
+  opacity: 1;
+}
+
+/* ───────── graph tooltip */
+.tip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 80;
+  pointer-events: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(4, 10, 7, 0.92);
+  border: 1px solid rgba(57, 211, 83, 0.4);
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+.tip b {
+  color: var(--green);
+}
+.tip span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* ───────── terminal */
+.term-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(2, 4, 3, 0.55);
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+}
+.term {
+  width: min(680px, 100%);
+  height: min(440px, 80vh);
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(5, 10, 8, 0.96);
+  border: 1px solid rgba(57, 211, 83, 0.3);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(0, 0, 0, 0.4), 0 0 60px rgba(57, 211, 83, 0.08);
+  animation: termIn 0.45s var(--ease);
+}
+@keyframes termIn {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+}
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--dim);
+}
+.term-bar i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+.term-bar i:nth-child(2) { background: #febc2e; }
+.term-bar i:nth-child(3) { background: #28c840; }
+.term-bar span {
+  flex: 1;
+  text-align: center;
+}
+.term-bar button {
+  font-size: 11px;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.term-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.term-body pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  color: var(--ink);
+}
+.term-body pre.out {
+  color: var(--muted);
+}
+.term-body pre.err {
+  color: #ff7b72;
+}
+.term-body pre a {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.term-body .ps {
+  color: var(--green);
+}
+.term-body form {
+  display: flex;
+  align-items: center;
+}
+.term-body input {
+  flex: 1;
+  background: none;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  font: inherit;
+  caret-color: var(--green);
+}
+
+@media (max-width: 899px) {
+  .nav,
+  .rail {
+    display: none;
+  }
+  .logo {
+    top: 18px;
+  }
+  .term-btn {
+    top: 14px;
+  }
+  .commit {
+    bottom: 14px;
+    font-size: 10.5px;
+    max-width: calc(100vw - 2 * var(--gutter));
+  }
+  .commit-msg {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ───────── theme toggle + transition */
+.hud-actions {
+  position: fixed;
+  z-index: 40;
+  top: 20px;
+  right: var(--gutter);
+  display: flex;
+  gap: 8px;
+}
+.hud-actions .term-btn {
+  position: static;
+}
+.theme-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(12px);
+  color: var(--gold);
+  transition: border-color 0.3s, transform 0.6s var(--ease);
+}
+.theme-btn:hover {
+  border-color: var(--gold);
+}
+.theme-btn svg {
+  transition: transform 0.8s var(--ease);
+}
+.theme-btn:hover svg {
+  transform: rotate(40deg);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+.tip p {
+  margin: 0;
+}
+.tip b.lc {
+  color: var(--lc-m);
+}
+.tip b.none {
+  color: var(--muted);
+  font-weight: 500;
+}
+@media (max-width: 899px) {
+  .hud-actions {
+    top: 14px;
+  }
+}

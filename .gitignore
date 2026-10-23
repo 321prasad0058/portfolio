@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# source files the site uses copies of
+CV11_Prasad_Alai.pdf
+Prasad_Image.webp

@@ -1,0 +1,350 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Daylight: a painted afternoon, after the background art of Studio Ghibli films.
+   Summer-sky blues, meadow greens, cream paper, sun-warm ink, a red like a hair ribbon.
+   Soft storybook type (Fraunces, SOFT axis), paper grain instead of film grain.
+   ───────────────────────────────────────────────────────────────────────────── */
+:root[data-theme='light'] {
+  --bg: #d6e8ee;
+  --ink: #2f2a24;
+  --muted: #5e5546;
+  --dim: #8a7f6a;
+  --green: #4c8a3a;
+  --green-2: #6aa84f;
+  --cyan: #3d7cb8;
+  --violet: #8a5fa8;
+  --gold: #c98a1c;
+  --red: #c8553d;
+  --line: rgba(110, 85, 45, 0.18);
+  --card: rgba(255, 250, 238, 0.86);
+  --card-line: rgba(150, 118, 64, 0.26);
+  --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --on-accent: #fffaf0;
+  --lc-e: #2a9d8f;
+  --lc-m: #d18b12;
+  --lc-h: #c8553d;
+  color-scheme: light;
+}
+
+[data-theme='light'] body {
+  background: linear-gradient(#5f9fd6, #a9d0e8 45%, #d6e8ee);
+}
+[data-theme='light'] ::selection {
+  background: #c8553d;
+  color: #fffaf0;
+}
+[data-theme='light'] :focus-visible {
+  outline-color: var(--red);
+}
+
+/* storybook display type */
+[data-theme='light'] .hello-name,
+[data-theme='light'] .head-title,
+[data-theme='light'] .contact-title,
+[data-theme='light'] .card-title,
+[data-theme='light'] .project-name,
+[data-theme='light'] .metric b,
+[data-theme='light'] .stats b,
+[data-theme='light'] .impact-strip b,
+[data-theme='light'] .stat-card .big,
+[data-theme='light'] .lc-top .big,
+[data-theme='light'] .gauge-val .count,
+[data-theme='light'] .loader-pct,
+[data-theme='light'] .logo {
+  font-variation-settings: 'SOFT' 100, 'WONK' 0, 'opsz' 144;
+  letter-spacing: -0.02em;
+}
+[data-theme='light'] .hello-name {
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: #2b2620;
+  text-shadow: 0 2px 30px rgba(255, 252, 240, 0.55);
+}
+[data-theme='light'] .hello-second {
+  color: var(--red);
+  -webkit-text-stroke: 0;
+  font-style: italic;
+  font-weight: 600;
+  text-shadow: 0 2px 30px rgba(255, 252, 240, 0.5);
+}
+[data-theme='light'] .head-title,
+[data-theme='light'] .contact-title {
+  font-weight: 750;
+  color: #2b2620;
+  text-shadow: 0 2px 24px rgba(255, 252, 240, 0.7);
+}
+[data-theme='light'] .eyebrow,
+[data-theme='light'] .eyebrow .prompt {
+  color: #24527f;
+}
+[data-theme='light'] .hello-role,
+[data-theme='light'] .hello-tag,
+[data-theme='light'] .lede,
+[data-theme='light'] .impact-strip span,
+[data-theme='light'] .impact-label {
+  color: #2f3a44;
+  text-shadow: 0 1px 12px rgba(255, 252, 240, 0.8);
+}
+[data-theme='light'] .scramble {
+  color: var(--red);
+}
+[data-theme='light'] .caret {
+  background: var(--red);
+}
+[data-theme='light'] .impact-strip b {
+  color: #2f6b2a;
+}
+[data-theme='light'] .impact-strip ul {
+  border-top-color: rgba(40, 60, 80, 0.2);
+}
+[data-theme='light'] .impact-strip li + li {
+  border-left-color: rgba(40, 60, 80, 0.2);
+}
+[data-theme='light'] .pillar-tags li {
+  background: rgba(255, 250, 238, 0.8);
+  border-color: var(--card-line);
+}
+[data-theme='light'] .pillar-tags i,
+[data-theme='light'] .pillars i {
+  box-shadow: none;
+}
+
+/* paper */
+[data-theme='light'] .card {
+  background:
+    radial-gradient(ellipse 120% 80% at 0% 0%, rgba(255, 255, 255, 0.55), transparent 60%),
+    var(--card);
+  border-color: var(--card-line);
+  box-shadow:
+    0 30px 60px -28px rgba(70, 50, 20, 0.38),
+    0 2px 0 rgba(255, 255, 255, 0.7) inset,
+    0 0 0 6px rgba(255, 250, 238, 0.25);
+  backdrop-filter: blur(8px) saturate(1.1);
+}
+[data-theme='light'] .head-n {
+  background: var(--red);
+  color: #fffaf0;
+}
+[data-theme='light'] .head-hash {
+  color: #8a5a10;
+}
+[data-theme='light'] .head-commit {
+  color: #4a4338;
+}
+[data-theme='light'] .chips li {
+  background: rgba(106, 168, 79, 0.1);
+  border-color: rgba(76, 138, 58, 0.25);
+}
+[data-theme='light'] .chips li:hover {
+  background: rgba(106, 168, 79, 0.2);
+  border-color: var(--green);
+}
+[data-theme='light'] .btn {
+  border-color: rgba(47, 42, 36, 0.3);
+  background: rgba(255, 250, 238, 0.6);
+}
+[data-theme='light'] .btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+[data-theme='light'] .btn-solid {
+  background: #4c8a3a;
+  border-color: #4c8a3a;
+  color: #fffaf0;
+  box-shadow: 0 10px 24px -10px rgba(60, 100, 40, 0.6);
+}
+[data-theme='light'] .btn-solid:hover {
+  background: #3e7530;
+  color: #fffaf0;
+}
+[data-theme='light'] .metric b,
+[data-theme='light'] .stats b {
+  color: #3e7a30;
+  text-shadow: none;
+}
+[data-theme='light'] .stat-card .big {
+  background: linear-gradient(120deg, #4c8a3a, #3d7cb8);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+[data-theme='light'] .metric em,
+[data-theme='light'] .project-impact {
+  color: var(--cyan);
+}
+[data-theme='light'] .project .project-impact {
+  color: color-mix(in srgb, var(--accent) 70%, #2f2a24);
+}
+[data-theme='light'] .project {
+  --accent-ink: color-mix(in srgb, var(--accent) 75%, #2f2a24);
+}
+[data-theme='light'] .project-name {
+  color: var(--accent-ink);
+  text-shadow: none;
+}
+[data-theme='light'] .project .sys-idx span,
+[data-theme='light'] .points li::before {
+  color: var(--accent-ink);
+}
+[data-theme='light'] .steps li::before {
+  background: var(--accent-ink);
+  color: #fffaf0;
+}
+[data-theme='light'] .project .btn-solid {
+  background: var(--accent-ink);
+  border-color: var(--accent-ink);
+}
+[data-theme='light'] .gauge-fg {
+  filter: none;
+}
+[data-theme='light'] .mail {
+  color: #2f6b2a;
+  border-bottom-color: rgba(76, 138, 58, 0.5);
+}
+[data-theme='light'] .socials a,
+[data-theme='light'] .seg {
+  background: rgba(255, 250, 238, 0.75);
+}
+[data-theme='light'] .sec-contact::before {
+  background: radial-gradient(ellipse 50% 45% at 50% 50%, rgba(255, 250, 238, 0.55), transparent 75%);
+}
+[data-theme='light'] .lede.center {
+  color: #3a3226;
+}
+[data-theme='light'] .foot {
+  color: #4a4338;
+}
+
+/* atmosphere: paper grain, warm light at the edges */
+[data-theme='light'] .grain {
+  opacity: 0.11;
+  mix-blend-mode: multiply;
+  animation: none;
+}
+[data-theme='light'] .vignette {
+  background: radial-gradient(ellipse 120% 90% at 50% 40%, transparent 60%, rgba(120, 90, 50, 0.16) 100%);
+}
+
+/* HUD */
+[data-theme='light'] .nav,
+[data-theme='light'] .term-btn,
+[data-theme='light'] .theme-btn {
+  background: rgba(255, 250, 238, 0.72);
+  border-color: var(--card-line);
+}
+[data-theme='light'] .nav button.on {
+  background: rgba(200, 85, 61, 0.12);
+  color: var(--red);
+}
+[data-theme='light'] .theme-btn {
+  color: #3d5a8a;
+}
+[data-theme='light'] .term-btn {
+  color: var(--green);
+}
+[data-theme='light'] .logo {
+  font-weight: 800;
+}
+[data-theme='light'] .logo i {
+  color: var(--red);
+}
+[data-theme='light'] .rail-line {
+  background: rgba(47, 42, 36, 0.15);
+}
+[data-theme='light'] .rail-fill {
+  background: linear-gradient(var(--cyan), var(--green));
+  box-shadow: none;
+}
+[data-theme='light'] .rail-dot {
+  background: #fffaf0;
+  border-color: rgba(76, 138, 58, 0.5);
+}
+[data-theme='light'] .rail-dot.on {
+  background: var(--red);
+  border-color: var(--red);
+  box-shadow: 0 0 0 4px rgba(200, 85, 61, 0.18);
+}
+[data-theme='light'] .rail-dot.on span {
+  color: var(--red);
+}
+[data-theme='light'] .commit-head {
+  background: var(--cyan);
+  color: #fffaf0;
+}
+[data-theme='light'] .commit-hash {
+  color: #8a5a10;
+}
+[data-theme='light'] .commit {
+  color: #3a3226;
+}
+
+/* cursor */
+[data-theme='light'] .cursor-dot {
+  background: var(--red);
+  mix-blend-mode: normal;
+}
+[data-theme='light'] .cursor-ring::before {
+  border-color: rgba(47, 42, 36, 0.45);
+}
+[data-theme='light'] .cursor-ring.hot::before {
+  background: rgba(200, 85, 61, 0.1);
+  border-color: var(--red);
+}
+[data-theme='light'] .cursor-ring.labelled::before {
+  background: rgba(200, 85, 61, 0.92);
+}
+[data-theme='light'] .cursor-ring span {
+  color: #fffaf0;
+}
+
+/* tooltip */
+[data-theme='light'] .tip {
+  background: rgba(255, 250, 238, 0.96);
+  border-color: var(--card-line);
+  color: var(--ink);
+  box-shadow: 0 12px 30px -12px rgba(70, 50, 20, 0.4);
+}
+[data-theme='light'] .tip b {
+  color: var(--green);
+}
+
+/* loader: morning paper */
+[data-theme='light'] .loader-panel {
+  background: #f4ecd8;
+}
+[data-theme='light'] .loader-panel.top {
+  border-bottom-color: rgba(200, 85, 61, 0.35);
+}
+[data-theme='light'] .loader-term {
+  color: #5e5546;
+}
+[data-theme='light'] .loader-term .okv {
+  color: var(--green);
+}
+[data-theme='light'] .loader-bar {
+  background: rgba(76, 138, 58, 0.15);
+}
+[data-theme='light'] .loader-bar i {
+  background: var(--green);
+  box-shadow: none;
+}
+[data-theme='light'] .loader-pct {
+  color: #2f2a24;
+}
+
+/* a wash of warm light behind the hero copy, so it reads over whatever the sky is doing */
+[data-theme='light'] .hello-inner::before {
+  content: '';
+  position: absolute;
+  inset: -60px -40px -40px calc(-1 * var(--gutter));
+  width: min(760px, 100vw);
+  background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(250, 246, 234, 0.72), rgba(250, 246, 234, 0) 72%);
+  pointer-events: none;
+  z-index: -1;
+}
+[data-theme='light'] .impact-strip::before {
+  content: '';
+  position: absolute;
+  inset: -24px -30px -32px calc(-1 * var(--gutter));
+  background: linear-gradient(to top, rgba(250, 246, 234, 0.75), rgba(250, 246, 234, 0));
+  pointer-events: none;
+  z-index: -1;
+}
