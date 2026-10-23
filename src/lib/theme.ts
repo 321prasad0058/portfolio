@@ -1,5 +1,5 @@
 // Dark ("night shift") or light (a painted, Ghibli-inspired daytime sky). Stored per visitor; the
-// first visit follows the system setting.
+// first visit always starts dark.
 export type Theme = 'dark' | 'light'
 
 const KEY = 'pa-theme'
@@ -11,7 +11,7 @@ function initial(): Theme {
     const s = localStorage.getItem(KEY)
     if (s === 'dark' || s === 'light') return s
   } catch { /* storage blocked */ }
-  return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+  return 'dark' // first visit always opens at night; daylight is one click away
 }
 
 let theme: Theme = initial()
