@@ -1,4 +1,8 @@
-# Prasad Alai · Portfolio
+<p align="center"><img src=".github/logo.png" width="120" alt="PA_ logo"></p>
+
+<h1 align="center">Prasad Anil Alai · Portfolio</h1>
+
+<p align="center"><img src=".github/social-preview.png" alt="Prasad Anil Alai — Software Engineer · Backend · Frontend · Agentic AI"></p>
 
 A scroll-driven 3D story, told as a `git log`. The camera rides a glowing commit line through space, and every chapter is a commit with its own set-piece:
 
