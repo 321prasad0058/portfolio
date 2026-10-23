@@ -3,13 +3,14 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Prasad Anil Alai — a scroll-driven 3D story of a software engineer, built with Three.js and GSAP",
+  "description": "Prasad Anil Alai \u2014 a scroll-driven 3D story of a software engineer, built with Three.js and GSAP",
   "scripts": {
     "dev": "vite --host",
     "activity": "node scripts/fetch-activity.mjs",
     "build": "node scripts/fetch-activity.mjs --soft && tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "deploy": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "gsap": "^3.15.0",
@@ -24,7 +25,10 @@
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.2",
     "typescript": "~6.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.5",
+    "firebase-tools": "^14.27.0"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

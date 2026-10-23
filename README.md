@@ -56,4 +56,8 @@ npm run preview
 
 ## Deploy
 
-Vercel: import the folder; `vercel.json` sets the build. Any static host works: upload `dist/`.
+Live at **https://prasad-alai.web.app** (Firebase Hosting).
+
+```bash
+npm run deploy   # refreshes the GitHub + LeetCode snapshot, builds, deploys to Firebase
+```
