@@ -13,6 +13,19 @@ declare global {
   }
 }
 
+// The landing URL as the visitor opened it, captured before the tracking tags are tidied away
+const landingHref = typeof window === 'undefined' ? '' : location.href
+const landingQuery = typeof window === 'undefined' ? new URLSearchParams() : new URLSearchParams(location.search)
+
+/** Remove utm_* tags from the address bar (they are only for attribution, not for the visitor to see). */
+function cleanAddressBar() {
+  const url = new URL(location.href)
+  const tags = [...url.searchParams.keys()].filter((k) => k.startsWith('utm_'))
+  if (!tags.length) return
+  tags.forEach((k) => url.searchParams.delete(k))
+  history.replaceState(history.state, '', url.pathname + url.search + url.hash)
+}
+
 const enabled =
   typeof window !== 'undefined' &&
   !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) &&
@@ -61,7 +74,7 @@ function linkTarget(a: HTMLAnchorElement) {
  * coordinates are never sent to Google Analytics.
  */
 async function lookupResumeVisitor() {
-  const q = new URLSearchParams(location.search)
+  const q = landingQuery
   if (q.get('utm_source') !== 'resume') return
   try {
     if (sessionStorage.getItem('pa-resume-seen')) return
@@ -95,7 +108,10 @@ async function lookupResumeVisitor() {
 }
 
 export function startAnalytics() {
-  if (!enabled || window.gtag) return
+  if (!enabled || window.gtag) {
+    cleanAddressBar()
+    return
+  }
   window.dataLayer = window.dataLayer || []
   window.gtag = function gtag() {
     // gtag expects the arguments object itself, not an array
@@ -103,7 +119,9 @@ export function startAnalytics() {
     window.dataLayer!.push(arguments)
   }
   window.gtag('js', new Date())
-  window.gtag('config', MEASUREMENT_ID)
+  // credit the visit with the original link (UTM tags included), then tidy the address bar
+  window.gtag('config', MEASUREMENT_ID, { page_location: landingHref })
+  cleanAddressBar()
 
   const load = () => {
     const s = document.createElement('script')
