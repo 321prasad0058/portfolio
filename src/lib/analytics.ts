@@ -67,18 +67,37 @@ function linkTarget(a: HTMLAnchorElement) {
   return rules.find(([re]) => re.test(href))?.[1] ?? (/^https?:/.test(href) ? 'other_external' : null)
 }
 
+/** Which tracked source this visit came from: the résumé link, or LinkedIn (tagged link or referrer). */
+function lookupSource(): 'resume' | 'linkedin' | null {
+  const src = landingQuery.get('utm_source')
+  if (src === 'resume') return 'resume'
+  if (src === 'linkedin') return 'linkedin'
+  // untagged clicks from LinkedIn (a post, a message) — when the browser says where the visitor came from
+  if (!src && /(^|\.)(linkedin\.com|lnkd\.in)$/.test(referrerHost())) return 'linkedin'
+  return null
+}
+
+function referrerHost() {
+  try {
+    return document.referrer ? new URL(document.referrer).hostname : ''
+  } catch {
+    return ''
+  }
+}
+
 /**
- * Visits that come from the résumé link (?utm_source=resume) get one extra lookup: the visitor's city,
- * state, PIN code and network owner (on an office network, that is usually the company's name), from
- * the free ipwho.is service. Sent once per visit as a `resume_visit` event; the IP address and exact
+ * Visits from the résumé link or from LinkedIn get one extra lookup: the visitor's city, state, PIN
+ * code and network owner (on an office network, that is usually the company's name), from the free
+ * ipwho.is service. Sent once per visit as `resume_visit` or `linkedin_visit`; the IP address and exact
  * coordinates are never sent to Google Analytics.
  */
-async function lookupResumeVisitor() {
-  const q = landingQuery
-  if (q.get('utm_source') !== 'resume') return
+async function lookupVisitor() {
+  const source = lookupSource()
+  if (!source) return
+  const event = `${source}_visit`
   try {
-    if (sessionStorage.getItem('pa-resume-seen')) return
-    sessionStorage.setItem('pa-resume-seen', '1')
+    if (sessionStorage.getItem(`pa-${source}-seen`)) return
+    sessionStorage.setItem(`pa-${source}-seen`, '1')
   } catch { /* storage blocked: look up anyway */ }
   try {
     const ctrl = new AbortController()
@@ -94,7 +113,7 @@ async function lookupResumeVisitor() {
       connection?: { org?: string; isp?: string; domain?: string }
     }
     if (!d.success) throw new Error('lookup failed')
-    track('resume_visit', {
+    track(event, {
       city: d.city ?? '',
       region: d.region ?? '',
       postal: d.postal ?? '',
@@ -103,7 +122,7 @@ async function lookupResumeVisitor() {
       network_domain: d.connection?.domain ?? '',
     })
   } catch {
-    track('resume_visit', { network: '(lookup failed)' })
+    track(event, { network: '(lookup failed)' })
   }
 }
 
@@ -144,5 +163,5 @@ export function startAnalytics() {
     { capture: true },
   )
   onTheme((t) => track('theme_change', { theme: t }))
-  void lookupResumeVisitor()
+  void lookupVisitor()
 }

@@ -527,7 +527,7 @@ export function Contact() {
       </div>
       <footer className="foot mono">
         <span>© {new Date().getFullYear()} Prasad Anil Alai</span>
-        <span>Three.js · GSAP · React, written by hand · anonymous visit stats via Google Analytics (with a city-level lookup for résumé links)</span>
+        <span>Three.js · GSAP · React, written by hand · anonymous visit stats via Google Analytics (with a city-level lookup for résumé and LinkedIn visits)</span>
         <span>
           press <kbd>`</kbd> for a terminal
         </span>
