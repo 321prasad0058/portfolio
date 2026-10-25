@@ -54,6 +54,47 @@ function linkTarget(a: HTMLAnchorElement) {
   return rules.find(([re]) => re.test(href))?.[1] ?? (/^https?:/.test(href) ? 'other_external' : null)
 }
 
+/**
+ * Visits that come from the résumé link (?utm_source=resume) get one extra lookup: the visitor's city,
+ * state, PIN code and network owner (on an office network, that is usually the company's name), from
+ * the free ipwho.is service. Sent once per visit as a `resume_visit` event; the IP address and exact
+ * coordinates are never sent to Google Analytics.
+ */
+async function lookupResumeVisitor() {
+  const q = new URLSearchParams(location.search)
+  if (q.get('utm_source') !== 'resume') return
+  try {
+    if (sessionStorage.getItem('pa-resume-seen')) return
+    sessionStorage.setItem('pa-resume-seen', '1')
+  } catch { /* storage blocked: look up anyway */ }
+  try {
+    const ctrl = new AbortController()
+    const timer = setTimeout(() => ctrl.abort(), 5000)
+    const r = await fetch('https://ipwho.is/?fields=success,city,region,postal,country,connection', { signal: ctrl.signal })
+    clearTimeout(timer)
+    const d = (await r.json()) as {
+      success: boolean
+      city?: string
+      region?: string
+      postal?: string
+      country?: string
+      connection?: { org?: string; isp?: string; domain?: string }
+    }
+    if (!d.success) throw new Error('lookup failed')
+    track('resume_visit', {
+      company: q.get('utm_campaign') ?? '(none)',
+      city: d.city ?? '',
+      region: d.region ?? '',
+      postal: d.postal ?? '',
+      country: d.country ?? '',
+      network: (d.connection?.org || d.connection?.isp || '').slice(0, 100),
+      network_domain: d.connection?.domain ?? '',
+    })
+  } catch {
+    track('resume_visit', { company: q.get('utm_campaign') ?? '(none)', network: '(lookup failed)' })
+  }
+}
+
 export function startAnalytics() {
   if (!enabled || window.gtag) return
   window.dataLayer = window.dataLayer || []
@@ -86,4 +127,5 @@ export function startAnalytics() {
     { capture: true },
   )
   onTheme((t) => track('theme_change', { theme: t }))
+  void lookupResumeVisitor()
 }
