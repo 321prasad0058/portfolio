@@ -82,7 +82,6 @@ async function lookupResumeVisitor() {
     }
     if (!d.success) throw new Error('lookup failed')
     track('resume_visit', {
-      company: q.get('utm_campaign') ?? '(none)',
       city: d.city ?? '',
       region: d.region ?? '',
       postal: d.postal ?? '',
@@ -91,7 +90,7 @@ async function lookupResumeVisitor() {
       network_domain: d.connection?.domain ?? '',
     })
   } catch {
-    track('resume_visit', { company: q.get('utm_campaign') ?? '(none)', network: '(lookup failed)' })
+    track('resume_visit', { network: '(lookup failed)' })
   }
 }
 
