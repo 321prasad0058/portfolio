@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { chapters, profile, projects } from '../data/profile'
+import { track } from '../lib/analytics'
 import { coarsePointer } from '../lib/perf'
 import { getTheme, setTheme, type Theme } from '../lib/theme'
 import { scrollToEl } from '../lib/scroll'
@@ -181,6 +182,7 @@ export function Terminal({ open, onClose }: { open: boolean; onClose: () => void
   const run = (raw: string) => {
     const cmd = raw.trim()
     const [name, ...args] = cmd.split(/\s+/)
+    if (name) track('terminal_command', { command: name.toLowerCase().slice(0, 20) })
     const out: Line[] = [{ kind: 'in', text: cmd }]
     const say = (text: string, href?: string) => out.push({ kind: 'out', text, href })
     switch (name.toLowerCase()) {

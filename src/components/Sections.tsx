@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { achievements, certifications, education, flexiloans, impact, leadership, pillars, profile, projects, stack } from '../data/profile'
 import type { Activity, Stats } from '../lib/activity'
+import { track } from '../lib/analytics'
 import { scrollToEl } from '../lib/scroll'
 import { FlLogo } from './FlLogo'
 
@@ -479,6 +480,7 @@ export function Contact() {
     try {
       await navigator.clipboard.writeText(profile.email)
       setCopied(true)
+      track('copy_email')
       setTimeout(() => setCopied(false), 1800)
     } catch {
       location.href = `mailto:${profile.email}`
@@ -525,7 +527,7 @@ export function Contact() {
       </div>
       <footer className="foot mono">
         <span>© {new Date().getFullYear()} Prasad Anil Alai</span>
-        <span>Three.js · GSAP · React, written by hand</span>
+        <span>Three.js · GSAP · React, written by hand · anonymous visit stats via Google Analytics</span>
         <span>
           press <kbd>`</kbd> for a terminal
         </span>

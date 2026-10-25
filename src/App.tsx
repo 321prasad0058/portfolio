@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { Cursor, Hud, Loader, Terminal } from './components/Chrome'
 import { LinkedIn } from './components/LinkedIn'
-import { flexiloans } from './data/profile'
+import { chapters, flexiloans } from './data/profile'
 import { Contact, Flexi, Hello, LeetCode, Origin, Projects, Proof, Toolchain } from './components/Sections'
 import { calendar, lastDays, refresh, snapshot, stats as statsOf, type Activity } from './lib/activity'
 import { heroIntro, setupCounts, setupMagnetic, setupReveals, setupScramble } from './lib/motion'
+import { startAnalytics, track, trackChapter } from './lib/analytics'
 import { reducedMotion } from './lib/perf'
 import { ScrollTrigger, lenis, startScroll } from './lib/scroll'
 import { getTheme, onTheme, setTheme, type Theme } from './lib/theme'
@@ -46,6 +47,11 @@ export default function App() {
   const mark = useCallback((label: string, value?: string) => setSteps((s) => s.map((x) => (x.label === label ? { ...x, ok: true, value } : x))), [])
 
   useEffect(() => onTheme(setThemeState), [])
+  useEffect(() => startAnalytics(), [])
+  useEffect(() => trackChapter(chapters[chapter].label), [chapter])
+  useEffect(() => {
+    if (term) track('terminal_open')
+  }, [term])
 
   // the 3D world, the scroll clock and the boot sequence
   useEffect(() => {
