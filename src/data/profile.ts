@@ -117,7 +117,7 @@ export const flexiloans = {
       plain: 'An autonomous voice agent that talks with customers in their own regional language and completes their loan application with them, in one conversation.',
       built: 'Real-time voice agents with live intent classification that routes high-intent leads straight to the sales team.',
       metrics: [
-        { value: 5, prefix: '< ', suffix: ' min', label: 'to a complete application' },
+        { value: 5, prefix: '<', suffix: ' min', label: 'to a complete application' },
         { value: 40, suffix: '%', prefix: '+', label: 'lead conversion' },
         { value: 35, suffix: '%', prefix: '+', label: 'CRM efficiency' },
       ],
@@ -255,6 +255,14 @@ export const certifications = [
   { name: 'Meta Front-End Developer', link: 'https://www.coursera.org/professional-certificates/meta-front-end-developer' },
   { name: 'IBM Product Management', link: 'https://www.coursera.org/account/accomplishments/records/0NM7SA9HRKCC' },
   { name: 'Google UI/UX Certificate', link: 'https://coursera.org/share/d90c5e1f44c13aad483166169af2bc4e' },
+]
+
+/** Languages spoken. `dots` (1–5) lights the level blocks; `hero` overrides the name shown in the hero line. */
+export const languages: { name: string; native: string; hero?: string; hello: string; level: string; dots: number }[] = [
+  { name: 'English', native: 'English', hello: 'Hello', level: 'Fluent', dots: 5 },
+  { name: 'German', native: 'Deutsch', hero: 'German', hello: 'Hallo', level: 'Fluent', dots: 5 },
+  { name: 'Hindi', native: 'हिन्दी', hello: 'नमस्ते', level: 'Fluent', dots: 5 },
+  { name: 'Marathi', native: 'मराठी', hello: 'नमस्कार', level: 'Fluent', dots: 5 },
 ]
 
 // The chapters of the story, as commits.

@@ -1119,28 +1119,6 @@ kbd {
   background: color-mix(in srgb, var(--cyan) 8%, transparent);
 }
 
-/* three metrics sit in one compact row */
-.metrics:has(> :nth-child(3)) {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: start;
-  gap: 12px 28px;
-}
-.metrics:has(> :nth-child(3)) .metric b {
-  white-space: nowrap;
-}
-.metrics:has(> :nth-child(3)) .metric {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-.metrics:has(> :nth-child(3)) .metric b {
-  font-size: clamp(28px, 2.7vw, 40px);
-}
-.metrics:has(> :nth-child(3)) .metric > span {
-  font-size: 12.5px;
-  max-width: none;
-}
 .card .chips.partners {
   margin-top: 0;
 }
@@ -1207,24 +1185,6 @@ kbd {
   font-size: 13.5px;
   line-height: 1.5;
 }
-.metrics:has(> :nth-child(4)) {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px 14px;
-}
-.metrics:has(> :nth-child(4)) .metric {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-.metrics:has(> :nth-child(4)) .metric b {
-  font-size: clamp(22px, 2.1vw, 30px);
-  white-space: nowrap;
-}
-.metrics:has(> :nth-child(4)) .metric > span {
-  font-size: 12px;
-  max-width: none;
-}
 #cjp .plain {
   font-size: 15px;
 }
@@ -1263,13 +1223,6 @@ body {
 @media (max-width: 899px) {
   .card {
     padding: 18px;
-  }
-  .metrics:has(> :nth-child(3)),
-  .metrics:has(> :nth-child(4)) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .metrics .metric b {
-    white-space: normal;
   }
   .lc .stat-card {
     padding: 12px;
@@ -1339,5 +1292,209 @@ body {
   }
   .hud .commit {
     display: none;
+  }
+}
+
+/* ───────── languages spoken */
+.langs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.lang {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--green) 6%, transparent);
+  overflow: hidden;
+  transition: border-color 0.3s, background 0.3s, transform 0.4s var(--ease);
+}
+.lang:hover,
+.lang:focus-visible {
+  border-color: color-mix(in srgb, var(--green) 55%, transparent);
+  background: color-mix(in srgb, var(--green) 12%, transparent);
+  transform: translateY(-2px);
+}
+/* the language's own name, which flips to a greeting on hover */
+.lang-word {
+  position: relative;
+  display: grid;
+  min-width: 4.6em;
+  height: 1.5em;
+  overflow: hidden;
+  font-size: 17px;
+  line-height: 1.5;
+}
+.lang-word b {
+  grid-area: 1 / 1;
+  font-family: var(--display), 'Noto Sans Devanagari', sans-serif;
+  font-weight: 700;
+  color: var(--green);
+  white-space: nowrap;
+  transition: transform 0.5s var(--ease), opacity 0.4s;
+}
+.lang-hello {
+  transform: translateY(110%);
+  opacity: 0;
+  color: var(--cyan) !important;
+}
+.lang:hover .lang-native,
+.lang:focus-visible .lang-native {
+  transform: translateY(-110%);
+  opacity: 0;
+}
+.lang:hover .lang-hello,
+.lang:focus-visible .lang-hello {
+  transform: translateY(0);
+  opacity: 1;
+}
+.lang-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.lang-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+.lang-level {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10.5px;
+  color: var(--muted);
+}
+.lang-level i {
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--green) 22%, transparent);
+}
+.lang-level i.on {
+  background: var(--green);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--green) 60%, transparent);
+}
+.lang-level i:last-of-type {
+  margin-right: 5px;
+}
+[data-theme='light'] .lang {
+  background: rgba(106, 168, 79, 0.08);
+}
+[data-theme='light'] .lang-word b {
+  color: #3e7a30;
+}
+[data-theme='light'] .lang-hello {
+  color: var(--red) !important;
+}
+[data-theme='light'] .lang-level i.on {
+  box-shadow: none;
+}
+.lang,
+.lang * {
+  overflow-wrap: normal;
+}
+.lang-name,
+.lang-level {
+  white-space: nowrap;
+}
+/* phones: one language per row, so nothing has to squeeze */
+@media (max-width: 599px) {
+  .langs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* hero: languages spoken, one quiet line under the pillars */
+.hello-langs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.hello-langs span:not(.dim) {
+  color: var(--ink);
+  font-family: var(--mono), 'Noto Sans Devanagari', sans-serif;
+}
+.hello-langs i {
+  font-style: normal;
+  color: var(--green);
+  margin-right: 10px;
+}
+[data-theme='light'] .hello-langs {
+  text-shadow: 0 1px 10px rgba(255, 252, 240, 0.8);
+}
+
+/* ───────── stat strip: cards with three or more numbers (CJP, Flexy) */
+.metrics:has(> :nth-child(3)) {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 0;
+}
+.metrics:has(> :nth-child(3)) .metric {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 2px 14px;
+  border-left: 1px solid var(--line);
+}
+.metrics:has(> :nth-child(3)) .metric:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+.metrics:has(> :nth-child(3)) .metric b {
+  font-size: clamp(24px, 2.4vw, 30px);
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-shadow: 0 0 22px rgba(57, 211, 83, 0.28);
+}
+.metrics:has(> :nth-child(3)) .metric > span {
+  font-size: 12px;
+  line-height: 1.4;
+  max-width: none;
+}
+[data-theme='light'] .metrics:has(> :nth-child(3)) .metric b {
+  text-shadow: none;
+}
+/* four numbers: same size as Flexy's, each column only as wide as its number, spread evenly
+   across the row (fixed quarters left wide empty gaps after the shorter values) */
+.metrics:has(> :nth-child(4)) {
+  grid-auto-columns: auto;
+  justify-content: space-between;
+}
+.metrics:has(> :nth-child(4)) .metric {
+  padding: 2px 0 2px 16px;
+}
+.metrics:has(> :nth-child(4)) .metric:first-child {
+  padding-left: 0;
+}
+/* phones: two per row (kept after the strip rules so it wins) */
+@media (max-width: 899px) {
+  .metrics:has(> :nth-child(3)) {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+    row-gap: 16px;
+  }
+  .metrics:has(> :nth-child(4)) .metric:nth-child(odd) {
+    padding-left: 0;
+  }
+  .metrics:has(> :nth-child(4)) .metric:nth-child(even) {
+    padding-left: 16px;
+  }
+  .metrics:has(> :nth-child(3)) .metric:nth-child(odd) {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .metrics:has(> :nth-child(3)) .metric b,
+  .metrics:has(> :nth-child(4)) .metric b {
+    font-size: 26px;
   }
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { achievements, certifications, education, flexiloans, impact, leadership, pillars, profile, projects, stack } from '../data/profile'
+import { achievements, certifications, education, flexiloans, impact, languages, leadership, pillars, profile, projects, stack } from '../data/profile'
 import type { Activity, Stats } from '../lib/activity'
 import { track } from '../lib/analytics'
 import { scrollToEl } from '../lib/scroll'
@@ -68,6 +68,15 @@ export function Hello() {
             </li>
           ))}
         </ul>
+        <p className="hello-langs mono hero-in">
+          <span className="dim">speaks</span>
+          {languages.map((l, i) => (
+            <span key={l.name} title={l.name}>
+              {i > 0 && <i aria-hidden>·</i>}
+              {l.hero ?? l.native}
+            </span>
+          ))}
+        </p>
         <div className="hello-cta hero-in" data-ui>
           <button className="btn btn-solid" data-magnetic onClick={() => scrollToEl('#flexiloans')}>
             See it in production <span aria-hidden>↓</span>
@@ -438,6 +447,28 @@ export function Origin() {
                 <a href={c.link} target="_blank" rel="noreferrer" className="link">
                   {c.name} <Arrow />
                 </a>
+              </li>
+            ))}
+          </ul>
+          <p className="label mono">languages</p>
+          <ul className="langs">
+            {languages.map((l) => (
+              <li key={l.name} className="lang" tabIndex={0}>
+                <span className="lang-word">
+                  <b className="lang-native">{l.native}</b>
+                  <b className="lang-hello" aria-hidden>
+                    {l.hello}
+                  </b>
+                </span>
+                <span className="lang-meta">
+                  <span className="lang-name">{l.name}</span>
+                  <span className="lang-level mono">
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <i key={n} className={n <= l.dots ? 'on' : ''} />
+                    ))}
+                    {l.level}
+                  </span>
+                </span>
               </li>
             ))}
           </ul>
