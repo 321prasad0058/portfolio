@@ -52,7 +52,7 @@ const GLOW: Record<string, Glow> = {
 // around the camera's focus point) falls out of focus — big enough to hold that whole model
 const FOCUS_RADIUS: Record<string, number> = {
   cjp: 13,
-  mcp: 9.5, flexy: 9.5, parser: 8, credit: 8,
+  mcp: 9.5, flexy: 9.5, guarantor: 12, credit: 8.5,
   kosha: 6.5, vana: 6.5, transcribo: 6.5,
 }
 
@@ -192,8 +192,9 @@ export class World {
       cjp: sceneKey(0, V(0, 1.9, -0.5), [21, 11], 0.18),
       mcp: sceneKey(1, V(-2.4, 0.3, 0), [15.5, 8]),
       flexy: sceneKey(2, V(0.6, 0.2, 0), [11.5, 7.5]),
-      parser: sceneKey(3, V(0, 0.2, 0), [11.5, 7.5]),
-      credit: sceneKey(4, V(0, 0.2, 0), [11.5, 7.5]),
+      // parser: sceneKey(3, V(0, 0.2, 0), [11.5, 7.5]), // parked
+      guarantor: sceneKey(3, V(-0.2, 0.55, -0.3), [19.5, 8.5], 0.14),
+      credit: sceneKey(4, V(0.6, 0.2, 0), [13.5, 7.5]),
     }
     this.keys = {
       hello: { target: AT.hello, dir: V(0, 0.04, 1), fit: [8.4, 8.4], side: 1, mobileFit: [8.4, 12] },

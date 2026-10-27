@@ -1412,29 +1412,37 @@ body {
   text-shadow: 0 1px 10px rgba(255, 252, 240, 0.8);
 }
 
-/* ───────── stat strip: cards with three or more numbers (CJP, Flexy) */
+/* ───────── stat strip: cards with three or more numbers (CJP, Flexy, Guarantor, Credit)
+   Equal columns, every number centred in its column, so the space on both sides of each divider is
+   the same. Sizes follow the card's own width (container units), not the screen's. */
 .metrics:has(> :nth-child(3)) {
+  container-type: inline-size;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
   gap: 0;
+}
+.metrics:has(> :nth-child(4)) {
+  --cols: 4;
 }
 .metrics:has(> :nth-child(3)) .metric {
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   gap: 6px;
-  padding: 2px 14px;
+  padding: 2px 10px;
   border-left: 1px solid var(--line);
 }
 .metrics:has(> :nth-child(3)) .metric:first-child {
   border-left: 0;
-  padding-left: 0;
 }
 .metrics:has(> :nth-child(3)) .metric b {
-  font-size: clamp(24px, 2.4vw, 30px);
+  font-size: clamp(20px, 7.4cqi, 32px);
   letter-spacing: -0.02em;
   white-space: nowrap;
   text-shadow: 0 0 22px rgba(57, 211, 83, 0.28);
+}
+.metrics:has(> :nth-child(4)) .metric b {
+  font-size: clamp(18px, 5.6cqi, 30px);
 }
 .metrics:has(> :nth-child(3)) .metric > span {
   font-size: 12px;
@@ -1444,38 +1452,32 @@ body {
 [data-theme='light'] .metrics:has(> :nth-child(3)) .metric b {
   text-shadow: none;
 }
-/* four numbers: same size as Flexy's, each column only as wide as its number, spread evenly
-   across the row (fixed quarters left wide empty gaps after the shorter values) */
-.metrics:has(> :nth-child(4)) {
-  grid-auto-columns: auto;
-  justify-content: space-between;
-}
-.metrics:has(> :nth-child(4)) .metric {
-  padding: 2px 0 2px 16px;
-}
-.metrics:has(> :nth-child(4)) .metric:first-child {
-  padding-left: 0;
-}
-/* phones: two per row (kept after the strip rules so it wins) */
-@media (max-width: 899px) {
-  .metrics:has(> :nth-child(3)) {
-    grid-auto-flow: row;
+/* phones: four numbers wrap to 2 × 2 */
+@media (max-width: 599px) {
+  .metrics:has(> :nth-child(4)) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    justify-content: stretch;
-    row-gap: 16px;
+    row-gap: 18px;
   }
-  .metrics:has(> :nth-child(4)) .metric:nth-child(odd) {
-    padding-left: 0;
-  }
-  .metrics:has(> :nth-child(4)) .metric:nth-child(even) {
-    padding-left: 16px;
-  }
-  .metrics:has(> :nth-child(3)) .metric:nth-child(odd) {
+  .metrics:has(> :nth-child(4)) .metric:nth-child(3) {
     border-left: 0;
-    padding-left: 0;
   }
-  .metrics:has(> :nth-child(3)) .metric b,
   .metrics:has(> :nth-child(4)) .metric b {
-    font-size: 26px;
+    font-size: clamp(22px, 9cqi, 30px);
   }
+}
+
+.parts.more {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.parts.more li::before {
+  content: '+';
+}
+.parts.more {
+  gap: 8px;
+}
+.parts.more span {
+  font-size: 13px;
+  line-height: 1.45;
 }
