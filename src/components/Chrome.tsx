@@ -150,6 +150,14 @@ export function Cursor({ label }: { label: string | null }) {
   )
 }
 
+/** Bring the contact form itself into view (not the section heading) and put the cursor in Name. */
+function openContactForm() {
+  const form = document.querySelector<HTMLElement>('.cform')
+  if (!form) return scrollToEl('#contact')
+  scrollToEl(form)
+  setTimeout(() => form.querySelector<HTMLInputElement>('input[name=name]')?.focus({ preventScroll: true }), 2300)
+}
+
 type Line = { kind: 'in' | 'out' | 'err'; text: string; href?: string }
 
 const HELP = `commands:
@@ -223,7 +231,7 @@ export function Terminal({ open, onClose }: { open: boolean; onClose: () => void
         say(`github    ${profile.links.github}`, profile.links.github)
         setTimeout(() => {
           onClose()
-          scrollToEl('#contact')
+          setTimeout(openContactForm, 250)
         }, 900)
         break
       case 'resume':
@@ -235,7 +243,8 @@ export function Terminal({ open, onClose }: { open: boolean; onClose: () => void
           say('[sudo] password for recruiter: ********\naccess granted. opening the contact form…')
           setTimeout(() => {
             onClose()
-            scrollToEl('#contact')
+            // scroll only after the terminal has closed and page scrolling has resumed
+            setTimeout(openContactForm, 250)
           }, 900)
         } else out.push({ kind: 'err', text: 'sudo: nice try' })
         break
