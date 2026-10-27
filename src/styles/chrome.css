@@ -266,7 +266,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 90;
+  /* above every overlay, including the terminal (95) and the loader (100) */
+  z-index: 110;
   pointer-events: none;
 }
 .cursor-dot {
