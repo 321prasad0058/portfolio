@@ -586,22 +586,6 @@ html[data-perf='low'][data-theme='light'] .card {
   text-shadow: 0 4px 40px rgba(4, 6, 11, 0.8);
   margin-bottom: 24px;
 }
-.contact-mail {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-  margin: 12px 0 34px;
-}
-.mail {
-  font-family: var(--mono);
-  font-size: clamp(16px, 2.2vw, 28px);
-  color: var(--green);
-  border-bottom: 1px dashed rgba(57, 211, 83, 0.5);
-  padding-bottom: 2px;
-  word-break: break-all;
-}
 .socials {
   display: flex;
   flex-wrap: wrap;
@@ -1235,9 +1219,6 @@ body {
   }
   .contact-title {
     font-size: clamp(34px, 10.5vw, 56px);
-  }
-  .mail {
-    font-size: 15px;
   }
   .head-title {
     font-size: clamp(30px, 9.5vw, 48px);

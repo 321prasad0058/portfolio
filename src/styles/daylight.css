@@ -195,10 +195,6 @@
 [data-theme='light'] .gauge-fg {
   filter: none;
 }
-[data-theme='light'] .mail {
-  color: #2f6b2a;
-  border-bottom-color: rgba(76, 138, 58, 0.5);
-}
 [data-theme='light'] .socials a,
 [data-theme='light'] .seg {
   background: rgba(255, 250, 238, 0.75);

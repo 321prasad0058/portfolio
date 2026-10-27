@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { achievements, certifications, education, flexiloans, impact, languages, leadership, pillars, profile, projects, stack } from '../data/profile'
 import type { Activity, Stats } from '../lib/activity'
-import { track } from '../lib/analytics'
 import { scrollToEl } from '../lib/scroll'
+import { ContactForm } from './ContactForm'
 import { FlLogo } from './FlLogo'
 
 const Arrow = () => (
@@ -506,17 +505,6 @@ export function Toolchain() {
 }
 
 export function Contact() {
-  const [copied, setCopied] = useState(false)
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(profile.email)
-      setCopied(true)
-      track('copy_email')
-      setTimeout(() => setCopied(false), 1800)
-    } catch {
-      location.href = `mailto:${profile.email}`
-    }
-  }
   const links = [
     ['GitHub', profile.links.github],
     ['LinkedIn', profile.links.linkedin],
@@ -538,14 +526,7 @@ export function Contact() {
         <p className="lede center" data-reveal>
           Backend that holds up under load, frontends people actually finish, AI agents that do real work. If your team needs that, I’d love to talk.
         </p>
-        <div className="contact-mail" data-reveal data-ui>
-          <a className="mail" href={`mailto:${profile.email}`} data-magnetic>
-            {profile.email}
-          </a>
-          <button className="btn" onClick={copy} data-magnetic>
-            {copied ? 'Copied ✓' : 'Copy email'}
-          </button>
-        </div>
+        <ContactForm />
         <ul className="socials" data-stagger data-ui>
           {links.map(([name, href]) => (
             <li key={name}>

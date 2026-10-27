@@ -5,5 +5,6 @@ import './styles/sections.css'
 import './styles/chrome.css'
 import './styles/daylight.css'
 import './styles/linkedin.css'
+import './styles/contact.css'
 
 createRoot(document.getElementById('root')!).render(<App />)

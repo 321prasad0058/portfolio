@@ -218,9 +218,13 @@ export function Terminal({ open, onClose }: { open: boolean; onClose: () => void
         break
       }
       case 'contact':
-        say(`email     ${profile.email}`, `mailto:${profile.email}`)
+        say('message   the contact form — taking you there…')
         say(`linkedin  ${profile.links.linkedin}`, profile.links.linkedin)
         say(`github    ${profile.links.github}`, profile.links.github)
+        setTimeout(() => {
+          onClose()
+          scrollToEl('#contact')
+        }, 900)
         break
       case 'resume':
         say('downloading Prasad_Alai_Resume.pdf', '/Prasad_Alai_Resume.pdf')
@@ -228,8 +232,11 @@ export function Terminal({ open, onClose }: { open: boolean; onClose: () => void
         break
       case 'sudo':
         if (args.join(' ') === 'hire-me') {
-          say('[sudo] password for recruiter: ********\naccess granted. opening a draft email…', `mailto:${profile.email}`)
-          location.href = `mailto:${profile.email}?subject=${encodeURIComponent("Let's talk")}`
+          say('[sudo] password for recruiter: ********\naccess granted. opening the contact form…')
+          setTimeout(() => {
+            onClose()
+            scrollToEl('#contact')
+          }, 900)
         } else out.push({ kind: 'err', text: 'sudo: nice try' })
         break
       case 'clear':

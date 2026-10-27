@@ -8,7 +8,6 @@ export const profile = {
   role: 'Software Engineer',
   pitch: 'I build production software at FlexiLoans: the customer portal, APIs and AI agents that take a small-business loan from first click to money in the bank.',
   location: 'Mumbai, India',
-  email: 'prasadalai2014@gmail.com',
   links: {
     github: 'https://github.com/321prasad0058',
     linkedin: 'https://www.linkedin.com/in/prasad-alai-52879a255',
@@ -256,6 +255,15 @@ export const certifications = [
   { name: 'IBM Product Management', link: 'https://www.coursera.org/account/accomplishments/records/0NM7SA9HRKCC' },
   { name: 'Google UI/UX Certificate', link: 'https://coursera.org/share/d90c5e1f44c13aad483166169af2bc4e' },
 ]
+
+/**
+ * Contact form. Messages are delivered to your inbox by Web3Forms (free, 250/month), form "Portfolio
+ * Contact". The access key is public by design: it can only send messages to you.
+ */
+export const contactForm = {
+  web3formsKey: 'f5747097-be96-4626-817c-973b6c82c895',
+  topics: ['A role on your team', 'Freelance / contract', 'Collaboration', 'Just saying hi'],
+}
 
 /** Languages spoken. `dots` (1–5) lights the level blocks; `hero` overrides the name shown in the hero line. */
 export const languages: { name: string; native: string; hero?: string; hello: string; level: string; dots: number }[] = [
