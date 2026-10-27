@@ -51,6 +51,8 @@ export type System = {
   scene: number
   name: string
   parts?: { title: string; text: string }[]
+  /** extra sections shown below the metrics */
+  more?: { title: string; text: string }[]
   short: string
   pillars: string[]
   plain: string
@@ -68,7 +70,7 @@ export const flexiloans = {
   location: 'Mumbai',
   about: 'FlexiLoans lends to India’s small businesses entirely online. I build the systems a loan travels through: the portal customers apply on, the AI agents that work alongside the team, and the engines underneath that read statements and fetch credit scores.',
   // the five scenes on the panorama, in order
-  scenes: ['Customer Journey Portal', 'Agent Workbench', 'Flexy voice AI', 'Statement parser', 'Credit engine'],
+  scenes: ['Customer Journey Portal', 'Agent Workbench', 'Flexy voice AI', 'Guarantor journey', 'Credit score'], // 'Statement parser' parked
   systems: [
     {
       id: 'cjp',
@@ -100,11 +102,15 @@ export const flexiloans = {
       scene: 1,
       name: 'AI Agent Workbench & Flexi-MCP',
       short: 'Agent Workbench',
-      pillars: ['Agentic AI', 'Backend'],
+      pillars: ['Agentic AI', 'Frontend', 'Backend'],
       plain: 'A SaaS platform that lets non-technical teams build and deploy their own AI agents, which then do real work inside the company, like looking up an application or pulling a report.',
-      built: 'I engineered the Python/Node.js backend of the Workbench and a Model Context Protocol server (Flexi-MCP) that links the agents to core company APIs, with guardrails on every call.',
+      built: 'The Workbench end to end: the frontend and UI, where anyone turns a use case into a working agent with one prompt, and the Python/Node.js backend. Plus Flexi-MCP, the MCP server linking agents to core APIs with guardrails on every call.',
       metrics: [{ value: 45, suffix: '%', label: 'fewer manual tasks' }],
-      tags: ['LLM agents', 'MCP', 'SaaS', 'Python', 'Node.js'],
+      more: [
+        { title: 'Flexi-MCP server', text: '63 tools across 12 domains: leads, loans, bureau, banking, policy, offers and messaging. Every call is authenticated, audit-logged and PII-masked; writes need explicit confirmation.' },
+        { title: 'One-prompt agent builder', text: 'Describe the job in plain words; the builder sets up a chat, document, OCR or voice agent with its model (Claude, GPT, Sarvam), tools, knowledge base and guardrails.' },
+      ],
+      tags: ['LLM agents', 'MCP', 'Next.js', 'React', 'Node.js', 'Python', 'Bedrock'],
     },
     {
       id: 'flexy',
@@ -124,6 +130,30 @@ export const flexiloans = {
       link: { href: 'https://loans.flexiloans.com/flexy', label: 'talk to Flexy' },
     },
     {
+      id: 'guarantor',
+      stop: 'guarantor',
+      scene: 3,
+      name: 'Guarantor Journey',
+      short: 'Guarantor',
+      pillars: ['Backend', 'Frontend'],
+      plain: 'Many business loans need a guarantor, who must verify themselves and sign before money is released. I built their whole journey end to end, from a shared link to a signed agreement.',
+      parts: [
+        { title: 'Invite & login', text: 'The applicant shares a link by WhatsApp, SMS or email; the guarantor logs in with an OTP and picks the loan they are backing.' },
+        { title: 'Verify, in parallel', text: 'Experian prefills PAN details; then NSDL (via IDfy), CIBIL and CKYC checks run side by side in a workflow that resumes on vendor callbacks.' },
+        { title: 'Sign & KYC', text: 'Aadhaar upload with a CKYC OTP, then a gate on the sanction letter, Leegality e-sign of the loan agreement and video KYC.' },
+      ],
+      built: '',
+      metrics: [
+        { value: 3, suffix: '×', label: 'faster verification, checks in parallel' },
+        { value: 100, suffix: '%', label: 'self-serve, on the guarantor’s phone' },
+        { value: 6, label: 'vendors in one flow' },
+      ],
+      partners: ['Experian', 'NSDL', 'IDfy', 'CIBIL', 'CKYC', 'Leegality'],
+      tags: ['Nest.js', 'Workflow engine', 'Callbacks', 'Redis', 'MongoDB', 'Angular', 'Server-driven routing'],
+      link: { href: 'https://loans.flexiloans.com/?nlp=10&journeyName=flow_guarantor', label: 'open the guarantor journey' },
+    },
+    /* Bank-statement parser: parked for now (kept, not shown). Restore by uncommenting and re-adding its scene.
+    {
       id: 'parser',
       stop: 'parser',
       scene: 3,
@@ -138,20 +168,27 @@ export const flexiloans = {
       ],
       tags: ['Node.js', 'Worker threads', 'Tokenizers', 'OOP'],
     },
+    */
     {
       id: 'credit',
       stop: 'credit',
       scene: 4,
-      name: 'Real-Time Credit Score Engine',
-      short: 'Credit engine',
-      pillars: ['Backend'],
-      plain: 'Shows a customer their credit score the moment they ask for it.',
-      built: 'Event-driven services for instant credit-profile retrieval, with multi-tier Redis caching and exponential-backoff retries against the credit bureaus.',
-      metrics: [
-        { value: 50, suffix: 'K+', label: 'checks a day, sub-second' },
-        { value: 48, suffix: '%', prefix: '+', label: 'qualified leads' },
+      name: 'Credit Score',
+      short: 'Credit score',
+      pillars: ['Backend', 'Frontend'],
+      plain: 'A free public page where any business owner can check their credit score in under a minute: name and mobile number, an OTP, and their full credit report with tips to improve it. A soft check, so it never affects their score.',
+      parts: [
+        { title: 'Bureau prefill API', text: 'Pulls a credit report from just a mobile number and name, dedupes the visitor into a lead, and turns raw account records into 16 metrics: accounts, overdues, enquiries, credit age and more.' },
+        { title: 'OTP & consent', text: 'Consent-first flow with OTP login, rate-limited per number in Redis (3 tries, 15-minute window).' },
+        { title: 'Report & dashboard', text: 'An Angular page with a score gauge and rule-based grading of every metric into doing right, could be better or hurting; one shared mapper so the same dashboard serves both the public page and the logged-in app.' },
       ],
-      tags: ['Event-driven', 'Redis', 'Retries', 'Java'],
+      built: '',
+      metrics: [
+        { value: 50, suffix: 'K+', label: 'checks a day' },
+        { value: 48, suffix: '%', prefix: '+', label: 'qualified leads' },
+        { value: 16, label: 'metrics per report' },
+      ],
+      tags: ['Nest.js', 'Angular signals', 'Redis', 'SSR', 'Bureau API'],
       link: { href: 'https://loans.flexiloans.com/credit-score', label: 'check your score' },
     },
   ] as System[],

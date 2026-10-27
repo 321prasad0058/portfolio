@@ -216,7 +216,7 @@ function cjp(): Scene {
   }
 }
 
-/** 4 · Statement parser: bank statements go through a scanner and come out as rows in a table. */
+/** (not shown) · Statement parser: bank statements go through a scanner and come out as rows in a table. */
 function parser(): Scene {
   const g = new THREE.Group()
   const sheetMat = toon(C.paper, { glow: 0.12, side: THREE.DoubleSide })
@@ -482,11 +482,174 @@ function voice(): Scene {
   }
 }
 
-/** 5 · Credit score engine: instant scores; most requests are answered by the caches, few reach the bureau. */
+/**
+ * 4 · Guarantor journey: the applicant shares a link (WhatsApp / SMS / email); the guarantor walks a
+ * track of steps — OTP login, consent, Experian prefill, details — then three checks run side by side
+ * (NSDL via IDfy, CIBIL, CKYC), followed by Aadhaar upload, Leegality e-sign and video KYC.
+ */
+function guarantor(): Scene {
+  const g = new THREE.Group()
+  const L = 18.6
+  const track = box(L, 0.14, 1.3, toon(C.body))
+  track.position.set(0, -1.25, 0)
+  const rail = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(L, 0.14, 1.3)), ink(C.violet, 0.7))
+  rail.position.copy(track.position)
+  g.add(track, rail)
+  const tagBg: Pair = ['rgba(4,10,8,0.82)', 'rgba(255,250,238,0.94)']
+
+  // the applicant's phone, sending the invite
+  const phone = new THREE.Group()
+  phone.position.set(-9.9, -0.2, 0)
+  phone.add(box(0.9, 1.7, 0.1, toon(C.body, { glow: 0.1 })))
+  const screen = box(0.76, 1.42, 0.02, flat(['#123a2a', '#dfeedd']))
+  screen.position.z = 0.06
+  phone.add(screen)
+  const phoneTag = label('applicant shares link', { size: 30, height: 0.25, color: C.soft })
+  phoneTag.position.set(0, -1.15, 0)
+  phone.add(phoneTag)
+  g.add(phone)
+  const channels = (['WhatsApp', 'SMS', 'Email'] as const).map((t, i) => {
+    const s = label(t, { size: 32, height: 0.28, color: [C.green, C.cyan, C.gold][i], bg: tagBg, weight: 700 })
+    g.add(s)
+    return { s, phase: i / 3 }
+  })
+
+  const steps: { name: string; vendor?: string; x: number; mat: 'v' | 'g' }[] = [
+    { name: 'Open link', x: -7.4, mat: 'v' },
+    { name: 'OTP login', x: -5.65, mat: 'v' },
+    { name: 'Consent', x: -3.9, mat: 'v' },
+    { name: 'PAN prefill', vendor: 'Experian', x: -2.15, mat: 'v' },
+    { name: 'Details', x: -0.4, mat: 'v' },
+    { name: 'Aadhaar', vendor: 'CKYC OTP', x: 3.8, mat: 'v' },
+    { name: 'e-Sign', vendor: 'Leegality', x: 5.55, mat: 'g' },
+    { name: 'Video KYC', vendor: 'VCIP', x: 7.3, mat: 'g' },
+  ]
+  const vMat = toon(C.violet, { glow: 0.4 })
+  const gMat = toon(C.gold, { glow: 0.45 })
+  const gates = steps.map((st) => {
+    const mat = st.mat === 'v' ? vMat : gMat
+    const arch = new THREE.Group()
+    const l = box(0.12, 1.9, 0.12, mat)
+    l.position.set(-0.55, -0.25, 0)
+    const r = l.clone()
+    r.position.x = 0.55
+    const top = box(1.25, 0.14, 0.14, mat)
+    top.position.y = 0.72
+    const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), flat(C.white))
+    lamp.position.y = 0.95
+    const tag = label(st.name, { size: 40, height: 0.36, bg: tagBg })
+    tag.position.y = 1.36
+    arch.add(l, r, top, lamp, tag)
+    arch.position.x = st.x
+    g.add(arch)
+    let vtag: THREE.Sprite | null = null
+    if (st.vendor) {
+      vtag = label(st.vendor, { size: 34, height: 0.3, color: st.mat === 'v' ? C.violet : C.gold, bg: tagBg, weight: 600 })
+      vtag.position.set(st.x, 1.95, -0.15)
+      g.add(vtag)
+    }
+    return { lamp, x: st.x, flash: 0, vtag }
+  })
+
+  // three checks run side by side: the journey fans out, then merges
+  const PX = 1.7
+  const lanes = [
+    { name: 'NSDL · IDfy', what: 'PAN verify', y: 1.55, c: C.green },
+    { name: 'CIBIL', what: 'bureau pull', y: 0.55, c: C.cyan },
+    { name: 'CKYC', what: 'KYC record', y: -0.45, c: C.gold },
+  ].map((ln) => {
+    const chip = box(1.4, 0.5, 0.18, toon(ln.c, { glow: 0.35 }))
+    chip.position.set(PX, ln.y, 0)
+    const t = label(ln.name, { size: 34, height: 0.27, color: ['#04100a', '#fffaf0'], weight: 700 })
+    t.position.set(PX, ln.y, 0.12)
+    const w = label(ln.what, { size: 28, height: 0.2, color: C.soft })
+    w.position.set(PX, ln.y - 0.42, 0.05)
+    const fan = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(new THREE.CatmullRomCurve3([new THREE.Vector3(PX - 1.15, -0.55, 0), new THREE.Vector3(PX - 0.8, ln.y, 0), new THREE.Vector3(PX + 0.8, ln.y, 0), new THREE.Vector3(PX + 1.15, -0.55, 0)]).getPoints(40)),
+      ink(ln.c, 0.5),
+    )
+    g.add(chip, t, w, fan)
+    const pk = new THREE.Mesh(new THREE.SphereGeometry(0.08, 10, 10), flat(ln.c))
+    g.add(pk)
+    return { ...ln, chip, pk, hit: 0 }
+  })
+  const par = label('in parallel', { size: 30, height: 0.24, color: C.soft })
+  par.position.set(PX, 2.25, 0)
+  g.add(par)
+
+  // the guarantor: a little figure walking the track, who turns gold once everything is signed
+  const walker = new THREE.Group()
+  const wMat = toon(C.violet, { glow: 0.5 })
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 0.3, 6, 12), wMat)
+  body.position.y = 0.1
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), wMat)
+  head.position.y = 0.5
+  walker.add(body, head)
+  g.add(walker)
+  const done = new THREE.Group()
+  const doneDisc = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 0.08, 32), toon(C.gold, { glow: 0.5 }))
+  doneDisc.rotation.x = Math.PI / 2
+  const tick = label('✓', { size: 70, height: 0.42, color: ['#3a2200', '#5a3a10'], font: 'body', weight: 800 })
+  tick.position.z = 0.06
+  done.add(doneDisc, tick)
+  done.position.set(8.75, -0.4, 0)
+  const doneTag = label('ready to disburse', { size: 30, height: 0.25, color: C.gold })
+  doneTag.position.set(8.75, -1.0, 0.3)
+  g.add(done, doneTag)
+  const goldC = new THREE.Color()
+  const violetC = new THREE.Color()
+  themed((t) => {
+    goldC.set(C.gold[t === 'dark' ? 0 : 1])
+    violetC.set(C.violet[t === 'dark' ? 0 : 1])
+  })
+
+  return {
+    g,
+    update(time, dt) {
+      const cycle = 11
+      const p = (time % cycle) / cycle
+      for (const ch of channels) {
+        const q = (time * 0.35 + ch.phase) % 1
+        ch.s.position.set(-9.9 + q * 1.4, 0.7 + q * 1.4, 0.2)
+        ch.s.material.opacity = Math.sin(q * Math.PI)
+      }
+      // walk the track, pausing in the parallel block while the three checks run
+      const x = p < 0.48 ? -8.4 + (p / 0.48) * (PX + 8.4) : p < 0.62 ? PX : PX + ((p - 0.62) / 0.38) * (8.75 - PX)
+      walker.position.set(x, -0.95 + Math.abs(Math.sin(time * 7)) * 0.05, 0)
+      walker.rotation.y = Math.sin(time * 3) * 0.2
+      wMat.color.copy(x > 8.2 ? goldC : violetC)
+      for (const gt of gates) {
+        if (Math.abs(x - gt.x) < 0.12) gt.flash = 1
+        gt.flash = Math.max(0, gt.flash - dt * 1.2)
+        gt.lamp.scale.setScalar(1 + gt.flash * 0.9)
+        if (gt.vtag) pulse(gt.vtag, 1 + gt.flash * 0.12)
+      }
+      const inPar = p >= 0.48 && p < 0.62
+      const pp = inPar ? (p - 0.48) / 0.14 : 0
+      for (const ln of lanes) {
+        // all three packets travel together: out along their lane, across, and back
+        const t = inPar ? pp : 0
+        ln.pk.visible = inPar
+        const pts = [PX - 1.15, PX + 1.15]
+        ln.pk.position.set(pts[0] + t * (pts[1] - pts[0]), -0.55 + Math.sin(t * Math.PI) * (ln.y + 0.55), 0.15)
+        if (inPar && Math.abs(t - 0.5) < 0.06) ln.hit = 1
+        ln.hit = Math.max(0, ln.hit - dt * 1.5)
+        ln.chip.scale.setScalar(1 + ln.hit * 0.12)
+      }
+      done.rotation.y = time * 1.5
+      done.scale.setScalar(x > 8.5 ? 1.15 : 0.85)
+    },
+  }
+}
+
+/**
+ * 5 · Credit score: a free public page. Name + mobile, an OTP, then a bureau "prefill" pulls the report
+ * by mobile alone; 16 metrics are graded into "doing right / could be better / hurting".
+ */
 function credit(): Scene {
   const g = new THREE.Group()
   const gauge = new THREE.Group()
-  gauge.position.x = -1.6
+  gauge.position.x = -2.3
   const SEG = 14
   const start = Math.PI * 1.15
   const span = Math.PI * 1.3
@@ -508,66 +671,84 @@ function credit(): Scene {
   const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.1, 32), toon(C.ink, { glow: 0.3 }))
   hub.rotation.x = Math.PI / 2
   gauge.add(needle, hub)
-  const score = label('742', { size: 90, height: 0.75, font: 'display', weight: 800, color: C.green })
+  const score = label('···', { size: 90, height: 0.75, font: 'display', weight: 800, color: C.green })
   score.position.y = -0.85
   const lo = label('300', { size: 34, height: 0.22, color: C.soft })
   lo.position.set(-2.2, -1.05, 0)
   const hi = label('900', { size: 34, height: 0.22, color: C.soft })
   hi.position.set(2.2, -1.05, 0)
-  const ms = label('< 1 s', { size: 36, height: 0.24, color: C.cyan })
-  ms.position.set(0, -1.55, 0)
-  gauge.add(score, lo, hi, ms)
+  const soft = label('soft check · no score impact', { size: 30, height: 0.19, color: C.cyan })
+  soft.position.set(0, -1.55, 0)
+  gauge.add(score, lo, hi, soft)
   g.add(gauge)
 
-  // the cache tiers on the right
-  const tiers = [
-    { y: 1.3, name: 'L1 · in-memory', c: C.green },
-    { y: 0.1, name: 'L2 · Redis', c: C.red },
-    { y: -1.1, name: 'credit bureau', c: C.gold },
-  ].map((t) => {
-    const disk = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.08, 40), toon(t.c, { glow: 0.35, opacity: 0.85 }))
-    disk.position.set(3.4, t.y, 0)
-    const tag = label(t.name, { size: 34, height: 0.22, color: C.soft })
-    tag.position.set(3.4, t.y - 0.32, 0.9)
-    g.add(disk, tag)
-    return { ...t, disk }
+  // the three steps a visitor goes through, lighting up in turn
+  const tagBg: Pair = ['rgba(4,10,8,0.82)', 'rgba(255,250,238,0.94)']
+  const stepsUi = [
+    { t: '1  name + mobile', y: 2.1 },
+    { t: '2  OTP verify', y: 1.45 },
+    { t: '3  bureau prefill', y: 0.8 },
+  ].map((s) => {
+    const chip = label(s.t, { size: 34, height: 0.32, color: C.soft, bg: tagBg, weight: 600 })
+    chip.position.set(2.3, s.y, 0)
+    chip.center.set(0, 0.5)
+    g.add(chip)
+    return { chip, text: s.t, on: false }
   })
-  const reqMat = flat(C.white)
-  const reqs = Array.from({ length: 10 }, (_, i) => {
-    const m = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 10), reqMat)
-    g.add(m)
-    // where this request is answered: mostly L1, some L2, rarely the bureau
-    const depth = i % 10 === 0 ? 2 : i % 3 === 0 ? 1 : 0
-    return { m, depth, phase: i / 10, x: 3.4 + (Math.random() - 0.5) * 1.2, z: (Math.random() - 0.5) * 1.0 }
+  // the report: 16 metrics graded into three health groups
+  const groups = [
+    { name: 'doing right', c: C.green, y: -0.15 },
+    { name: 'could be better', c: C.gold, y: -0.75 },
+    { name: 'hurting', c: C.red, y: -1.35 },
+  ].map((gr) => {
+    const card = box(2.8, 0.48, 0.12, toon(gr.c, { glow: 0.3 }))
+    card.position.set(3.85, gr.y, 0)
+    const t = label(gr.name, { size: 32, height: 0.28, color: ['#04100a', '#fffaf0'], weight: 700 })
+    t.position.set(3.85, gr.y, 0.1)
+    g.add(card, t)
+    return { card, t }
   })
+  const metricsTag = label('16 metrics from the report', { size: 28, height: 0.24, color: C.soft })
+  metricsTag.position.set(3.85, -1.85, 0.05)
+  g.add(metricsTag)
+
   let target = 742
   let current = 300
-  let shown = -1
-  let next = 0
+  let shown = ''
+  let cycleStart = -1
   return {
     g,
     update(time, dt) {
-      if (time > next) {
-        next = time + 4.5
-        target = 705 + Math.round(Math.random() * 110)
+      const cycle = 7
+      const k = Math.floor(time / cycle)
+      if (k !== cycleStart) {
+        cycleStart = k
+        target = 690 + Math.round(Math.random() * 130)
         current = 300
       }
-      current += (target - current) * damp(2.2, dt)
-      const v = Math.round(current)
+      const p = (time % cycle) / cycle
+      // steps light one by one; the score only appears after the prefill
+      stepsUi.forEach((s, i) => {
+        const on = p > 0.08 + i * 0.12
+        if (on !== s.on) {
+          s.on = on
+          relabel(s.chip, on ? `${s.text}  ✓` : s.text)
+        }
+        pulse(s.chip, on && p < 0.12 + i * 0.12 ? 1.08 : 1)
+      })
+      const reveal = p > 0.45
+      if (reveal) current += (target - current) * damp(2.4, dt)
+      const v = reveal ? String(Math.round(current)) : '···'
       if (v !== shown) {
         shown = v
-        relabel(score, String(v))
+        relabel(score, v)
       }
       needle.rotation.z = start - Math.PI / 2 - ((current - 300) / 600) * span
-      for (const r of reqs) {
-        const p = (time * 0.5 + r.phase) % 1
-        const floor = tiers[r.depth].y + 0.1
-        const top = 2.6
-        const down = p < 0.5
-        const f = down ? p * 2 : (1 - p) * 2
-        r.m.position.set(r.x, top + (floor - top) * f, r.z)
-      }
-      for (const t of tiers) t.disk.rotation.y = time * 0.3
+      groups.forEach((gr, i) => {
+        const show = Math.max(0, Math.min(1, (p - 0.62 - i * 0.07) / 0.1))
+        gr.card.scale.set(Math.max(0.001, show), 1, 1)
+        gr.t.material.opacity = show
+      })
     },
   }
 }
@@ -581,7 +762,9 @@ export type FlexiPiece = Piece & {
 export function createFlexi(center: THREE.Vector3, names: string[], sceneStops: string[][]): FlexiPiece {
   const group = new THREE.Group()
   group.position.copy(center)
-  const makers = [cjp, agent, voice, parser, credit]
+  // the bank-statement parser scene is kept below but left out of the ring for now
+  const makers = [cjp, agent, voice, guarantor, credit]
+  void parser // the statement-parser scene stays in the code, unused, until it returns
   const outs: THREE.Vector3[] = []
   const spots: THREE.Vector3[] = []
   const scenes = makers.map((make, i) => {
@@ -737,7 +920,8 @@ export function createFlexi(center: THREE.Vector3, names: string[], sceneStops: 
       // in the overview the systems stand larger, so they read from up here; normal size up close
       const overview = Math.max(0, 1 - Math.abs(ctx.story - ctx.storyOf('flx')))
       for (const sc of scenes) {
-        sc.g.scale.setScalar(1 + overview * 0.55)
+        // the long guarantor track grows less, so it stays inside the ring
+        sc.g.scale.setScalar(1 + overview * (sc === scenes[3] ? 0.12 : 0.55))
         const want = Math.atan2(camLocal.x - sc.g.position.x, camLocal.z - sc.g.position.z)
         let d = want - sc.yaw
         d = Math.atan2(Math.sin(d), Math.cos(d))

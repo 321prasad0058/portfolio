@@ -167,7 +167,7 @@ export function Flexi() {
                   </ol>
                 ) : (
                   <>
-                    <p className="label mono">what I built</p>
+                    <p className="label mono">built</p>
                     <p className="muted built">{s.built}</p>
                   </>
                 )}
@@ -182,6 +182,16 @@ export function Flexi() {
                       </div>
                     ))}
                   </div>
+                )}
+                {s.more && (
+                  <ol className="parts more">
+                    {s.more.map((p) => (
+                      <li key={p.title}>
+                        <strong className="mono">{p.title}</strong>
+                        <span className="muted">{p.text}</span>
+                      </li>
+                    ))}
+                  </ol>
                 )}
                 {s.partners && (
                   <>
