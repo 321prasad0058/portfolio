@@ -1,5 +1,7 @@
 import * as THREE from 'three'
 import { C, flat, flatLabel, ink, label, relabel, themed, toon, type Pair } from '../paint'
+import { buildCar } from '../cars/build'
+import { ALTROZ, SIERRA_EV, VICTORIS } from '../cars/specs'
 import { type Piece } from '../util'
 
 const box = (w: number, h: number, d: number, m: THREE.Material) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m)
@@ -79,12 +81,12 @@ export function createKosha(center: THREE.Vector3): Piece {
   const border = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.75, 2.35, 0.1)), ink(C.gold))
   const seal = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.05, 10, 48), toon(C.gold, { glow: 0.6 }))
   seal.position.set(0, 0.62, 0.06)
-  const title = label('CREDIT PASSPORT', { size: 34, height: 0.17, color: ['#ffd98a', '#fff3d6'], weight: 700 })
-  title.position.set(0, 1.0, 0.07)
-  const score = label('742', { size: 90, height: 0.5, font: 'display', weight: 800, color: ['#ffd98a', '#fff3d6'] })
-  score.position.set(0, 0.05, 0.07)
-  const band = label('verified · lender-ready', { size: 30, height: 0.14, color: ['#bfe8d8', '#e8f3ec'] })
-  band.position.set(0, -0.32, 0.07)
+  const title = flatLabel('CREDIT PASSPORT', { size: 34, height: 0.15, color: ['#ffd98a', '#fff3d6'], weight: 700 })
+  title.position.set(0, 1.0, 0.045)
+  const score = flatLabel('742', { size: 90, height: 0.46, font: 'display', weight: 800, color: ['#ffd98a', '#fff3d6'] })
+  score.position.set(0, 0.05, 0.045)
+  const band = flatLabel('verified · lender-ready', { size: 30, height: 0.13, color: ['#bfe8d8', '#e8f3ec'] })
+  band.position.set(0, -0.32, 0.045)
   passport.add(card, border, seal, title, score, band)
   // a QR code anyone can scan to verify it
   const qr = new THREE.InstancedMesh(new THREE.BoxGeometry(0.07, 0.07, 0.02), flat(['#bfe8d8', '#fffaf0']), 81)
@@ -127,6 +129,161 @@ export function createKosha(center: THREE.Vector3): Piece {
         f.p.rotation.set(-1.1 * (1 - t) + Math.sin(t * 9) * 0.3, t * 3, Math.sin(t * 6) * 0.4)
         f.p.scale.setScalar(Math.sin((Math.min(t, 0.9) / 0.9) * Math.PI) * 0.9 + 0.1)
       }
+    },
+  }
+}
+
+/** SahiCar: its EV, SUV and hatchback lap a test track; each is scored at the gate, and the right one wins. */
+export function createSahiCar(center: THREE.Vector3): Piece {
+  const group = new THREE.Group()
+  group.position.copy(center)
+  const stage = new THREE.Group()
+  stage.position.y = -1.1
+  stage.rotation.x = 0.12
+  group.add(stage)
+
+  // the track: an asphalt ring with white edges and lane dashes, round a dark infield
+  const R = 2.7
+  const road = new THREE.Mesh(new THREE.RingGeometry(R - 0.5, R + 0.5, 96), toon(['#141b1f', '#8f8a80'], { side: THREE.DoubleSide }))
+  road.rotation.x = -Math.PI / 2
+  const infield = new THREE.Mesh(new THREE.CircleGeometry(R - 0.5, 64), toon(['#0b1310', '#5d7a60'], { side: THREE.DoubleSide }))
+  infield.rotation.x = -Math.PI / 2
+  infield.position.y = -0.002
+  stage.add(road, infield)
+  for (const r of [R - 0.47, R + 0.47]) {
+    const edge = new THREE.Mesh(new THREE.RingGeometry(r - 0.025, r + 0.025, 96), flat(['#4f6e60', '#fffaf0'], undefined, { side: THREE.DoubleSide }))
+    edge.rotation.x = -Math.PI / 2
+    edge.position.y = 0.005
+    stage.add(edge)
+  }
+  const DASHES = 28
+  const dash = new THREE.InstancedMesh(new THREE.BoxGeometry(0.06, 0.01, 0.28), flat(['#5f8070', '#fffaf0']), DASHES)
+  const d = new THREE.Object3D()
+  for (let i = 0; i < DASHES; i++) {
+    const a = (i / DASHES) * Math.PI * 2
+    d.position.set(Math.cos(a) * R, 0.008, Math.sin(a) * R)
+    d.rotation.y = -a
+    d.updateMatrix()
+    dash.setMatrixAt(i, d.matrix)
+  }
+  stage.add(dash)
+
+  // the scanner gate on the right of the track: it spans the road, so its face looks at the camera
+  // and the cars drive straight through it
+  const GATE = 0
+  const gate = new THREE.Group()
+  gate.position.set(Math.cos(GATE) * R, 0, Math.sin(GATE) * R)
+  gate.rotation.y = -GATE
+  const gateMat = toon(['#2a3430', '#e9e4d8'])
+  for (const x of [-0.6, 0.6]) {
+    const post = box(0.07, 0.95, 0.07, gateMat)
+    post.position.set(x, 0.475, 0)
+    gate.add(post)
+  }
+  const beam = box(1.27, 0.1, 0.09, gateMat)
+  beam.position.y = 0.95
+  gate.add(beam)
+  const scan = new THREE.Mesh(new THREE.PlaneGeometry(1.13, 0.06), flat(['#e8efec', '#ffffff'], 0.7))
+  gate.add(scan)
+  stage.add(gate)
+
+  // SahiCar's own procedural cars, at true relative size
+  const SCALE = 0.27
+  const rigs = [
+    { spec: SIERRA_EV, score: 92, kind: 'EV' },
+    { spec: VICTORIS, score: 84, kind: 'SUV' },
+    { spec: ALTROZ, score: 78, kind: 'Hatchback' },
+  ].map((c) => {
+    const rig = buildCar(c.spec, { detail: 'low' })
+    rig.group.scale.setScalar(SCALE)
+    stage.add(rig.group)
+    return { ...c, rig }
+  })
+  rigs.forEach((c) => c.rig.setLights(0))
+  const BEST = Math.max(...rigs.map((c) => c.score))
+
+  // the SahiScore dial, in white, standing in the middle of the track
+  const dial = new THREE.Group()
+  dial.position.set(0, 0.62, 0.55)
+  dial.scale.setScalar(0.9)
+  stage.add(dial)
+  const TICKS = 36
+  const tickMat = new THREE.MeshBasicMaterial({ transparent: true })
+  const ticks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.035, 0.14, 0.02), tickMat, TICKS)
+  const ARC = Math.PI * 1.5
+  for (let i = 0; i < TICKS; i++) {
+    const a = Math.PI * 1.25 - (i / (TICKS - 1)) * ARC
+    d.position.set(Math.cos(a) * 0.72, Math.sin(a) * 0.72, 0)
+    d.rotation.set(0, 0, a - Math.PI / 2)
+    d.updateMatrix()
+    ticks.setMatrixAt(i, d.matrix)
+  }
+  dial.add(ticks)
+  const WHITE: Pair = ['#d9dfdc', '#ffffff']
+  const title = label('SahiScore', { size: 30, height: 0.16, color: WHITE, weight: 600 })
+  title.position.y = 0.3
+  const num = label('00', { size: 90, height: 0.46, font: 'display', weight: 800, color: WHITE })
+  num.position.y = -0.03
+  const verdict = label('scoring…', { size: 30, height: 0.16, color: WHITE, weight: 600 })
+  verdict.position.y = -0.4
+  dial.add(title, num, verdict)
+  const caption = label('every car · 5-year cost · safety · fit', { size: 30, height: 0.18, color: C.soft })
+  caption.position.set(0, -1.75, 3.5)
+  group.add(caption)
+
+  const lit = new THREE.Color()
+  const dim = new THREE.Color()
+  themed((t) => {
+    // white, but kept under the night glow's threshold so it reads as white rather than a halo
+    lit.set(t === 'dark' ? '#b9c0bc' : '#ffffff')
+    dim.set(t === 'dark' ? '#26302c' : '#9fb3a2')
+    tickMat.opacity = t === 'dark' ? 0.85 : 1
+  })
+
+  let judged = -1
+  let shown = 0
+  let target = 0
+  let lastKind = ''
+  let lastNum = -1
+  let lastTime = -1
+  const SPEED = 0.36 // rad/s round the track
+  return {
+    group,
+    center,
+    radius: 6,
+    update(time) {
+      const dt = lastTime < 0 ? 0 : Math.min(0.1, time - lastTime)
+      lastTime = time
+      // cars evenly spaced, driving anticlockwise as seen from above; each takes its turn through the gate
+      let nearest = -1
+      rigs.forEach((c, i) => {
+        const a = GATE - time * SPEED + (i / rigs.length) * Math.PI * 2
+        c.rig.group.position.set(Math.cos(a) * R, 0, Math.sin(a) * R)
+        c.rig.group.rotation.y = -(a - Math.PI / 2)
+        c.rig.spin((SPEED * R * dt) / SCALE)
+        const off = Math.atan2(Math.sin(a - GATE), Math.cos(a - GATE))
+        if (off > -0.3 && off < 0.05) nearest = i
+      })
+      if (nearest >= 0 && nearest !== judged) {
+        judged = nearest
+        target = rigs[nearest].score
+        shown = 40
+      }
+      shown += (target - shown) * 0.06
+      const v = Math.round(shown)
+      const k = judged < 0 ? 'scoring…' : rigs[judged].score === BEST ? `${rigs[judged].kind} · the right car` : rigs[judged].kind
+      if (k !== lastKind) {
+        lastKind = k
+        relabel(verdict, k)
+      }
+      if (v !== lastNum) {
+        lastNum = v
+        relabel(num, String(v).padStart(2, '0'))
+        for (let i = 0; i < TICKS; i++) ticks.setColorAt(i, i / (TICKS - 1) <= v / 100 ? lit : dim)
+        if (ticks.instanceColor) ticks.instanceColor.needsUpdate = true
+      }
+      // the scan line sweeps up and down the gate
+      scan.position.y = 0.1 + ((Math.sin(time * 2.4) + 1) / 2) * 0.75
     },
   }
 }

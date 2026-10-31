@@ -15,7 +15,7 @@ import { createCore } from './pieces/Core'
 import { createFlexi } from './pieces/Flexi'
 import { createGraph, type GraphPiece } from './pieces/Graph'
 import { createLeetCode, type LeetPiece } from './pieces/LeetCode'
-import { createKosha, createTranscribo, createVana } from './pieces/Projects'
+import { createKosha, createSahiCar, createTranscribo, createVana } from './pieces/Projects'
 import { createClouds, createDrift, createSky } from './pieces/Sky'
 import { createPortal, createSpace } from './pieces/Space'
 import { createStack, type StackPiece } from './pieces/Stack'
@@ -47,13 +47,17 @@ const GLOW: Record<string, Glow> = {
   hello: [0.62, 0.5, 0.32],
   proof: [0.36, 0.4, 0.56],
   leetcode: [0.36, 0.4, 0.56],
+  // SahiCar's cars and score dial read cleaner without a halo
+  sahicar: [0, 0.4, 1],
+  // no halo on the shop sign or the passport, so their text stays sharp
+  kosha: [0, 0.4, 1],
 }
 // stops where one project is shown up close: at night, everything beyond this radius (in world units,
 // around the camera's focus point) falls out of focus — big enough to hold that whole model
 const FOCUS_RADIUS: Record<string, number> = {
   cjp: 13,
   mcp: 9.5, flexy: 9.5, guarantor: 12, credit: 8.5,
-  kosha: 6.5, vana: 6.5, transcribo: 6.5,
+  kosha: 6.5, vana: 6.5, sahicar: 6.5, transcribo: 6.5,
 }
 
 // Where each set-piece lives. The journey runs down -z, swinging left and right.
@@ -61,8 +65,9 @@ const AT = {
   hello: V(0, 0, 0),
   flexi: V(-4, 0, -52),
   vana: V(16, -0.5, -95),
-  kosha: V(26, 1, -114),
-  transcribo: V(16, 0.5, -133),
+  kosha: V(26, 1, -111),
+  sahicar: V(16, 0.5, -127),
+  transcribo: V(26, 0.5, -143),
   graph: V(0, -2, -168),
   leetcode: V(-16, 0.5, -198),
   academy: V(12, 2, -228),
@@ -145,7 +150,7 @@ export class World {
     this.stack = stack
     const under = (p: THREE.Vector3, dy: number, dz = 0) => p.clone().add(V(0, dy, dz))
     const fork = V(6, -3.2, -84)
-    const merge = V(4, -3.6, -150)
+    const merge = V(6, -3.6, -154)
     this.pieces = [
       createSky(),
       createClouds(30, -340, low ? 18 : 34),
@@ -153,12 +158,13 @@ export class World {
       createSpace(low ? 2200 : 5200, 30, -340),
       createCommitLine(
         [V(0, -3.6, 30), under(AT.hello, -3.6, 1), under(AT.flexi, -4.6, 0), fork, V(7, -3.8, -114), merge, V(0, -3.2, -164.2), under(AT.leetcode, -4.4), under(AT.academy, -4.6), under(AT.stack, -5.8), V(0, -1.8, -288), AT.contact.clone().add(V(0, 0, -1))],
-        [fork, under(AT.vana, -2.6), under(AT.kosha, -3), under(AT.transcribo, -3.1), merge],
+        [fork, under(AT.vana, -2.6), under(AT.kosha, -3), under(AT.sahicar, -3.1), under(AT.transcribo, -3.1), merge],
         [
           { at: under(AT.hello, -3.6, 1), hash: 'a1f3c20' },
           { at: under(AT.flexi, -4.6), hash: 'f1e8a5e' },
           { at: under(AT.kosha, -3), hash: 'kosha' },
           { at: under(AT.vana, -2.6), hash: 'vana' },
+          { at: under(AT.sahicar, -3.1), hash: 'sahicar' },
           { at: under(AT.transcribo, -3.1), hash: 'transcribo' },
           { at: V(0, -3.2, -164.2), hash: 'c0de400' },
           { at: under(AT.leetcode, -4.4), hash: 'lc-581' },
@@ -170,6 +176,7 @@ export class World {
       flexi,
       createKosha(AT.kosha),
       createVana(AT.vana),
+      createSahiCar(AT.sahicar),
       createTranscribo(AT.transcribo),
       graph,
       leet,
@@ -202,9 +209,10 @@ export class World {
       // the system map from the top: the FlexiLoans logo faces straight up at the camera
       flx: { target: AT.flexi.clone().add(V(0, 0, 3)), dir: V(0, 1.15, 1), fit: [62, 28], side: 1, mobileFit: [44, 66] },
       ...local,
-      kosha: { target: AT.kosha.clone().add(V(-0.4, 0, 0)), dir: V(0.15, 0.2, 1), fit: [10.5, 7.5], side: -1, mobileFit: [9.5, 12] },
       vana: { target: AT.vana, dir: V(-0.15, 0.5, 1), fit: [9.5, 7.5], side: 1, mobileFit: [9, 12] },
-      transcribo: { target: AT.transcribo, dir: V(-0.1, 0.25, 1), fit: [9.8, 7], side: 1, mobileFit: [9.5, 12] },
+      kosha: { target: AT.kosha.clone().add(V(-0.4, 0, 0)), dir: V(0.15, 0.2, 1), fit: [10.5, 7.5], side: -1, mobileFit: [9.5, 12] },
+      sahicar: { target: AT.sahicar.clone().add(V(0, 0.1, 0.3)), dir: V(-0.12, 0.42, 1), fit: [7.8, 6.6], side: 1, mobileFit: [8, 11] },
+      transcribo: { target: AT.transcribo, dir: V(0.1, 0.25, 1), fit: [9.8, 7], side: -1, mobileFit: [9.5, 12] },
       proof: {
         target: AT.graph.clone().add(V(0, 2.4, 0)),
         dir: V(0, 0.5, 1),
