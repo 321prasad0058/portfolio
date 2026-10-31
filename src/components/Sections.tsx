@@ -229,7 +229,7 @@ export function Projects() {
     <>
       {projects.map((p, i) => (
         <section key={p.id} id={i === 0 ? 'projects' : undefined} className="sec" data-stop={p.id}>
-          <div className={`wrap ${i === 1 ? 'split-right' : 'split-left'}`}>
+          <div className={`wrap ${i % 2 ? 'split-right' : 'split-left'}`}>
             {i === 0 && <Head n="02" hash="3d9b0a7" msg="merge: things I built on my own" title="Built on my own." />}
             <article className="card project" data-reveal data-ui style={{ ['--accent' as string]: p.accent }}>
               <p className="mono sys-idx">

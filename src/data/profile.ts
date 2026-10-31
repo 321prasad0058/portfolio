@@ -195,7 +195,7 @@ export const flexiloans = {
 }
 
 export type Project = {
-  id: 'kosha' | 'vana' | 'transcribo'
+  id: 'kosha' | 'vana' | 'sahicar' | 'transcribo'
   name: string
   tagline: string
   plain: string
@@ -239,6 +239,22 @@ export const projects: Project[] = [
     live: 'https://kosha-ai.web.app',
     code: 'https://github.com/fl-prasad-alai/Kosha',
     accent: '#f5b84b',
+  },
+  {
+    id: 'sahicar',
+    name: 'SahiCar',
+    tagline: 'An honest car advisor for India.',
+    plain: 'Buying a car in India means wading through dealer leads and paid rankings. SahiCar asks nine questions about your life, then scores every new car, variant and fuel on what it will really cost you over five years, how safe it is and whether it fits your roads and family, and tells you whether to buy now or wait.',
+    how: [
+      'A two-minute SahiFit quiz turns your budget, family, city and daily drive into weights',
+      'SahiScore ranks 142 models and 1,224 variants on 11 dimensions: on-road and 5-year cost, Bharat NCAP safety, fit and timing',
+      'Procedural three.js cars, traced from real designs, drive the hero; it works offline and holds 60 fps on slow phones',
+    ],
+    impact: '142 models · 1,224 variants costed · no dealer leads, no sponsored rankings',
+    stack: ['React 19', 'TypeScript', 'Three.js', 'GSAP', 'Firebase', 'Vite'],
+    live: 'https://sahicar-in.web.app',
+    code: 'https://github.com/321prasad0058/SahiCar',
+    accent: '#3ccf8e',
   },
   {
     id: 'transcribo',

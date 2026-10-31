@@ -13,7 +13,7 @@ import { getTheme, onTheme, setTheme, type Theme } from './lib/theme'
 import { World } from './webgl/World'
 
 // which chapter (0..6) each story stop belongs to
-const CHAPTER_OF: Record<string, number> = { hello: 0, kosha: 2, vana: 2, transcribo: 2, proof: 3, leetcode: 3, origin: 4, stack: 5, contact: 6 }
+const CHAPTER_OF: Record<string, number> = { hello: 0, kosha: 2, vana: 2, sahicar: 2, transcribo: 2, proof: 3, leetcode: 3, origin: 4, stack: 5, contact: 6 }
 for (const s of ['flx', ...flexiloans.systems.map((x) => x.stop)]) CHAPTER_OF[s] = 1
 const chapterOf = (id: string) => CHAPTER_OF[id] ?? 0
 
