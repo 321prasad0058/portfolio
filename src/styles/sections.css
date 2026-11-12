@@ -105,14 +105,13 @@
 }
 /* slow devices skip the blur, so cards get a near-solid fill instead — in the active theme's colour
    (this rule outranks the theme rules, so it must pick the colour itself) */
-html[data-perf='low'] .card {
+html[data-lite] .card {
   backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
-html[data-perf='low']:not([data-theme='light']) .card {
+html[data-lite]:not([data-theme='light']) .card {
   background: rgba(8, 14, 13, 0.88);
 }
-html[data-perf='low'][data-theme='light'] .card {
+html[data-lite][data-theme='light'] .card {
   background: rgba(255, 250, 238, 0.95);
 }
 .card > p + p {

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { C, flat, ink, label, type Pair } from '../paint'
+import { C, flat, ink, label, themed, type Pair } from '../paint'
 import { damp, type Piece } from '../util'
 
 // The toolchain as a constellation: every tool a star on a sphere, linked to its nearest neighbours.
@@ -41,9 +41,17 @@ export function createStack(center: THREE.Vector3, groups: string[][]): StackPie
   })
   const lineGeo = new THREE.BufferGeometry()
   lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(seg, 3))
-  spin.add(new THREE.LineSegments(lineGeo, ink(C.green, 0.22)))
-  spin.add(new THREE.Mesh(new THREE.IcosahedronGeometry(R * 0.55, 2), flat(C.green, 0.07)))
-  ;(spin.children.at(-1) as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>).material.wireframe = true
+  // the links: a faint glow at night; by day a deeper green, strong enough to read against the sky
+  const lineMat = ink(C.green, 0.22)
+  const shellMat = flat(C.green, 0.07)
+  shellMat.wireframe = true
+  themed((t) => {
+    lineMat.opacity = t === 'dark' ? 0.22 : 0.62
+    if (t === 'light') lineMat.color.set('#356e2a')
+    shellMat.opacity = t === 'dark' ? 0.07 : 0.16
+  })
+  spin.add(new THREE.LineSegments(lineGeo, lineMat))
+  spin.add(new THREE.Mesh(new THREE.IcosahedronGeometry(R * 0.55, 2), shellMat))
   const core = new THREE.Mesh(new THREE.SphereGeometry(0.35, 24, 24), flat(['#4fbf74', '#e0a43a']))
   group.add(core)
 

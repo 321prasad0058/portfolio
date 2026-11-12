@@ -356,3 +356,27 @@
   pointer-events: none;
   z-index: -1;
 }
+
+/* terminal: cream paper in daylight, the same window as the contact form */
+[data-theme='light'] .term-wrap {
+  background: rgba(70, 52, 28, 0.22);
+}
+[data-theme='light'] .term {
+  background: rgba(255, 250, 238, 0.98);
+  border-color: var(--card-line);
+  box-shadow: 0 40px 100px -30px rgba(70, 50, 20, 0.5), 0 0 0 1px rgba(76, 138, 58, 0.08);
+}
+[data-theme='light'] .term-bar {
+  color: var(--dim);
+}
+[data-theme='light'] .term-bar button {
+  border-color: var(--card-line);
+  color: var(--muted);
+}
+[data-theme='light'] .term-body pre.err {
+  color: var(--red);
+}
+[data-theme='light'] .term-body ::selection {
+  background: rgba(76, 138, 58, 0.25);
+  color: var(--ink);
+}

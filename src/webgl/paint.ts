@@ -88,6 +88,19 @@ export const C = {
   white: ['#d9ffe4', '#fffaf0'] as Pair,
 }
 
+// Labels repaint whenever web fonts finish loading. The font stylesheets load in the background, so
+// fonts can arrive well after the labels were first drawn with fallback type.
+const repaints = new Set<() => void>()
+let repaintQueued = false
+document.fonts?.addEventListener?.('loadingdone', () => {
+  if (repaintQueued) return
+  repaintQueued = true
+  requestAnimationFrame(() => {
+    repaintQueued = false
+    repaints.forEach((r) => r())
+  })
+})
+
 /** A text label as a camera-facing sprite, repainted for each theme. */
 const INDIC = '"Noto Sans Devanagari", "Noto Sans Tamil", "Noto Sans Kannada", "Noto Sans Bengali", "Noto Sans Telugu", "Noto Sans Gurmukhi"'
 
@@ -150,6 +163,7 @@ export function label(
   themed(draw)
   // fonts may arrive after the first paint
   document.fonts?.ready.then(() => draw(getTheme()))
+  repaints.add(() => draw(getTheme()))
   // canvas text does not trigger web-font downloads by itself: ask for the script fonts this text needs
   if (/[\u0900-\u0DFF\u0A00-\u0A7F]/.test(initialText))
     document.fonts?.load(`${weight} ${size}px ${INDIC}`, initialText).then(() => draw(getTheme()), () => {})
