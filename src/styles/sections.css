@@ -509,9 +509,64 @@ html[data-perf='low'][data-theme='light'] .card {
 }
 .project-links {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 22px;
 }
+/* a project's YouTube channel: solid YouTube red, a soft glow, and a sheen that sweeps across on hover */
+.project .btn.btn-yt {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, #ff2d4f 0%, #ff0033 55%, #e6002e 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 10px 28px -8px rgba(255, 0, 51, 0.65),
+    0 0 22px -4px rgba(255, 0, 51, 0.45);
+  transition: box-shadow 0.35s var(--ease), background 0.35s var(--ease);
+}
+.project .btn-yt::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.38) 48%, transparent 66%);
+  transform: translateX(-120%);
+  transition: transform 0.75s var(--ease);
+}
+.project .btn.btn-yt:hover {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, #ff4060 0%, #ff1a45 55%, #f00032 100%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset,
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 16px 36px -8px rgba(255, 0, 51, 0.8),
+    0 0 34px -2px rgba(255, 0, 51, 0.6);
+}
+.project .btn-yt:hover::after {
+  transform: translateX(120%);
+}
+.btn-yt .yt-mark {
+  flex: none;
+  display: block;
+  filter: drop-shadow(0 1px 1px rgba(120, 0, 20, 0.35));
+  transition: transform 0.35s var(--ease);
+}
+.project .btn-yt:hover .yt-mark {
+  transform: scale(1.12);
+}
+.project .btn-yt:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .project .btn-yt::after { display: none; }
+}
+
 .project .btn-solid {
   background: var(--accent);
   border-color: var(--accent);

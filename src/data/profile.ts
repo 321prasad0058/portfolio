@@ -204,6 +204,8 @@ export type Project = {
   stack: string[]
   live?: string
   code?: string
+  /** the project's YouTube channel, shown as its own button */
+  youtube?: string
   accent: string
 }
 
@@ -225,6 +227,23 @@ export const projects: Project[] = [
     accent: '#9b7bff',
   },
   {
+    id: 'sahicar',
+    name: 'SahiCar',
+    tagline: 'An honest car advisor for India.',
+    plain: 'Buying a car in India means wading through dealer leads and paid rankings. SahiCar asks nine questions about your life, then scores every new car, variant and fuel on what it will really cost you over five years, how safe it is and whether it fits your roads and family, and tells you whether to buy now or wait.',
+    how: [
+      'A two-minute SahiFit quiz turns your budget, family, city and daily drive into weights',
+      'SahiScore ranks every car on 11 dimensions: on-road price in your state, 5-year cost, Bharat NCAP safety, fit and timing',
+      'A Hinglish YouTube channel of data Shorts, rendered from the same numbers in code',
+    ],
+    impact: '144 models · 1,227 variants · 13 states · 41 upcoming launches · no dealer leads',
+    stack: ['React 19', 'TypeScript', 'Three.js', 'GSAP', 'Firebase', 'Vite'],
+    live: 'https://sahicar-in.web.app',
+    code: 'https://github.com/321prasad0058/SahiCar',
+    youtube: 'https://www.youtube.com/@SahiCar',
+    accent: '#3ccf8e',
+  },
+  {
     id: 'kosha',
     name: 'Kosha',
     tagline: 'A credit passport for India’s corner shops.',
@@ -239,22 +258,6 @@ export const projects: Project[] = [
     live: 'https://kosha-ai.web.app',
     code: 'https://github.com/fl-prasad-alai/Kosha',
     accent: '#f5b84b',
-  },
-  {
-    id: 'sahicar',
-    name: 'SahiCar',
-    tagline: 'An honest car advisor for India.',
-    plain: 'Buying a car in India means wading through dealer leads and paid rankings. SahiCar asks nine questions about your life, then scores every new car, variant and fuel on what it will really cost you over five years, how safe it is and whether it fits your roads and family, and tells you whether to buy now or wait.',
-    how: [
-      'A two-minute SahiFit quiz turns your budget, family, city and daily drive into weights',
-      'SahiScore ranks 142 models and 1,224 variants on 11 dimensions: on-road and 5-year cost, Bharat NCAP safety, fit and timing',
-      'Procedural three.js cars, traced from real designs, drive the hero; it works offline and holds 60 fps on slow phones',
-    ],
-    impact: '142 models · 1,224 variants costed · no dealer leads, no sponsored rankings',
-    stack: ['React 19', 'TypeScript', 'Three.js', 'GSAP', 'Firebase', 'Vite'],
-    live: 'https://sahicar-in.web.app',
-    code: 'https://github.com/321prasad0058/SahiCar',
-    accent: '#3ccf8e',
   },
   {
     id: 'transcribo',

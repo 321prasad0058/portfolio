@@ -188,6 +188,18 @@
   background: var(--accent-ink);
   color: #fffaf0;
 }
+/* the YouTube button keeps its red on cream paper, with a warmer, softer shadow */
+[data-theme='light'] .project .btn.btn-yt {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, #ff2d4f 0%, #ff0033 55%, #e6002e 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset, 0 10px 24px -10px rgba(200, 0, 40, 0.7);
+}
+[data-theme='light'] .project .btn.btn-yt:hover {
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 16px 30px -10px rgba(200, 0, 40, 0.8);
+}
 [data-theme='light'] .project .btn-solid {
   background: var(--accent-ink);
   border-color: var(--accent-ink);

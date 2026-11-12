@@ -164,7 +164,7 @@ const HELP = `commands:
   whoami          who is this
   ls              list chapters
   projects        side projects
-  open <name>     open a project (vana, kosha, sahicar, …)
+  open <name>     open a project (vana, sahicar, kosha, …)
   goto <chapter>  fly to a chapter
   contact         ways to reach me
   resume          download the résumé

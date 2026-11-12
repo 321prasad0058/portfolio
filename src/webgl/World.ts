@@ -64,9 +64,10 @@ const FOCUS_RADIUS: Record<string, number> = {
 const AT = {
   hello: V(0, 0, 0),
   flexi: V(-4, 0, -52),
+  // projects, in story order: VANA, SahiCar, Kosha, Transcribo
   vana: V(16, -0.5, -95),
-  kosha: V(26, 1, -111),
-  sahicar: V(16, 0.5, -127),
+  sahicar: V(26, 0.5, -111),
+  kosha: V(16, 1, -127),
   transcribo: V(26, 0.5, -143),
   graph: V(0, -2, -168),
   leetcode: V(-16, 0.5, -198),
@@ -158,7 +159,7 @@ export class World {
       createSpace(low ? 2200 : 5200, 30, -340),
       createCommitLine(
         [V(0, -3.6, 30), under(AT.hello, -3.6, 1), under(AT.flexi, -4.6, 0), fork, V(7, -3.8, -114), merge, V(0, -3.2, -164.2), under(AT.leetcode, -4.4), under(AT.academy, -4.6), under(AT.stack, -5.8), V(0, -1.8, -288), AT.contact.clone().add(V(0, 0, -1))],
-        [fork, under(AT.vana, -2.6), under(AT.kosha, -3), under(AT.sahicar, -3.1), under(AT.transcribo, -3.1), merge],
+        [fork, under(AT.vana, -2.6), under(AT.sahicar, -3.1), under(AT.kosha, -3), under(AT.transcribo, -3.1), merge],
         [
           { at: under(AT.hello, -3.6, 1), hash: 'a1f3c20' },
           { at: under(AT.flexi, -4.6), hash: 'f1e8a5e' },
@@ -167,7 +168,7 @@ export class World {
           { at: under(AT.sahicar, -3.1), hash: 'sahicar' },
           { at: under(AT.transcribo, -3.1), hash: 'transcribo' },
           { at: V(0, -3.2, -164.2), hash: 'c0de400' },
-          { at: under(AT.leetcode, -4.4), hash: 'lc-581' },
+          { at: under(AT.leetcode, -4.4), hash: 'lc-602' },
           { at: under(AT.academy, -4.6), hash: '7b2e91d' },
           { at: under(AT.stack, -5.8), hash: '5ac7e11' },
         ],
@@ -210,8 +211,9 @@ export class World {
       flx: { target: AT.flexi.clone().add(V(0, 0, 3)), dir: V(0, 1.15, 1), fit: [62, 28], side: 1, mobileFit: [44, 66] },
       ...local,
       vana: { target: AT.vana, dir: V(-0.15, 0.5, 1), fit: [9.5, 7.5], side: 1, mobileFit: [9, 12] },
-      kosha: { target: AT.kosha.clone().add(V(-0.4, 0, 0)), dir: V(0.15, 0.2, 1), fit: [10.5, 7.5], side: -1, mobileFit: [9.5, 12] },
-      sahicar: { target: AT.sahicar.clone().add(V(0, 0.1, 0.3)), dir: V(-0.12, 0.42, 1), fit: [7.8, 6.6], side: 1, mobileFit: [8, 11] },
+      // SahiCar is 2nd (card on the right, scene left), Kosha 3rd (card left, scene right): angles mirrored to match
+      sahicar: { target: AT.sahicar.clone().add(V(0, 0.1, 0.3)), dir: V(0.12, 0.42, 1), fit: [7.8, 6.6], side: -1, mobileFit: [8, 11] },
+      kosha: { target: AT.kosha.clone().add(V(0.4, 0, 0)), dir: V(-0.15, 0.2, 1), fit: [10.5, 7.5], side: 1, mobileFit: [9.5, 12] },
       transcribo: { target: AT.transcribo, dir: V(0.1, 0.25, 1), fit: [9.8, 7], side: -1, mobileFit: [9.5, 12] },
       proof: {
         target: AT.graph.clone().add(V(0, 2.4, 0)),

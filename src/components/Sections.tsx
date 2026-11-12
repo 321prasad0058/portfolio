@@ -10,6 +10,14 @@ const Arrow = () => (
   </svg>
 )
 
+// the play mark for a project's YouTube channel
+const YouTubeMark = () => (
+  <svg className="yt-mark" viewBox="0 0 28 20" width="22" height="16" aria-hidden>
+    <rect width="28" height="20" rx="5.5" fill="#fff" />
+    <path d="M11.3 5.6v8.8l7.4-4.4z" fill="#ff0033" />
+  </svg>
+)
+
 function Head({ n, hash, msg, title }: { n: string; hash: string; msg: string; title: string }) {
   return (
     <header className="head">
@@ -254,6 +262,11 @@ export function Projects() {
                 {p.live && (
                   <a className="btn btn-solid" href={p.live} target="_blank" rel="noreferrer" data-magnetic>
                     Live <Arrow />
+                  </a>
+                )}
+                {p.youtube && (
+                  <a className="btn btn-yt" href={p.youtube} target="_blank" rel="noreferrer" data-magnetic aria-label={`${p.name} on YouTube`}>
+                    <YouTubeMark /> YouTube <Arrow />
                   </a>
                 )}
                 {p.code && (

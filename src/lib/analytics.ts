@@ -52,6 +52,7 @@ function linkTarget(a: HTMLAnchorElement) {
   const rules: [RegExp, string][] = [
     [/linkedin\.com/, 'linkedin'],
     [/leetcode\.com/, 'leetcode'],
+    [/youtube\.com\/@SahiCar/i, 'sahicar_youtube'],
     [/github\.com\/[^/]+\/Kosha/i, 'kosha_code'],
     [/github\.com\/[^/]+\/VANA/i, 'vana_code'],
     [/github\.com\/[^/]+\/transcribo/i, 'transcribo_code'],
