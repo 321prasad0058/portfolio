@@ -7,7 +7,7 @@ import { FocusBlurPass } from './FocusBlur'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 import { education, flexiloans, pillars, stack as stackData } from '../data/profile'
 import type { Calendar } from '../lib/activity'
-import { FrameMeter, coarsePointer, getTier, onTier, reducedMotion, setTier } from '../lib/perf'
+import { FrameGuard, coarsePointer, getTier, onTier, reducedMotion, setTier } from '../lib/perf'
 import { getTheme, onTheme, type Theme } from '../lib/theme'
 import { createAcademy } from './pieces/Academy'
 import { createCommitLine } from './pieces/CommitLine'
@@ -118,16 +118,7 @@ export class World {
   private width = 1
   private height = 1
   private wide = true
-  // render resolution steps for this device and tier, best first; `level` is the one in use and
-  // `floor` the best level allowed (raised when a step up immediately proved too slow)
-  private scales: number[] = [1]
-  private level = 0
-  private floor = 0
-  private probing = false
-  private meter = new FrameMeter(
-    () => this.slower(),
-    () => this.faster(),
-  )
+  private guard = new FrameGuard(() => setTier('low'))
   private clock = new THREE.Timer()
   private time = 0
   private cursorLabel: string | null = null
@@ -311,7 +302,6 @@ export class World {
   }
 
   private applyTheme(t: Theme) {
-    this.meter?.pause(1200) // the theme cross-fade is a one-off cost, not a verdict
     const day = t === 'light'
     const bg = new THREE.Color(day ? '#d6e8ee' : '#04060b')
     this.scene.background = bg
@@ -335,15 +325,8 @@ export class World {
 
   private applyTier() {
     const low = getTier() === 'low'
-    // the 3D resolution ladder. Touch screens are dense but their GPUs are small, so they start at
-    // 1.25× (the text on top is HTML and stays crisp at full resolution either way).
-    const max = Math.min(devicePixelRatio, low ? 1 : coarsePointer ? 1.25 : 1.75)
-    const steps = low ? [1, 0.85, 0.7, 0.6] : [1.75, 1.5, 1.25, 1, 0.85]
-    this.scales = [max, ...steps.filter((x) => x < max - 0.01)]
-    this.level = 0
-    this.floor = 0
-    this.probing = false
-    this.renderer.setPixelRatio(this.scales[0])
+    // touch devices: their screens are dense but their GPUs are small, so cap the pixel ratio lower
+    this.renderer.setPixelRatio(Math.min(devicePixelRatio, low ? 1 : coarsePointer ? 1.5 : 1.75))
     if (!low && !this.composer) {
       this.composer = new EffectComposer(this.renderer)
       this.composer.addPass(new RenderPass(this.scene, this.camera))
@@ -363,29 +346,6 @@ export class World {
       this.dof = undefined
     }
     this.resize()
-    this.meter.pause(1500)
-  }
-
-  /** Frames are running slow: render fewer pixels; at the bottom of the ladder, drop the glow passes. */
-  private slower() {
-    // a step up that did not hold: never go that high again
-    if (this.probing) this.floor = this.level + 1
-    this.probing = false
-    if (this.level < this.scales.length - 1) this.setLevel(this.level + 1)
-    else if (getTier() === 'high') setTier('low')
-  }
-
-  /** Sustained headroom: try one step sharper. */
-  private faster() {
-    if (this.level <= this.floor) return
-    this.probing = true
-    this.setLevel(this.level - 1)
-  }
-
-  private setLevel(i: number) {
-    this.level = i
-    this.renderer.setPixelRatio(this.scales[i])
-    this.resize()
   }
 
   private resize() {
@@ -393,7 +353,6 @@ export class World {
     this.height = innerHeight
     this.wide = this.width >= 900 && this.width / this.height > 1.1
     this.renderer.setSize(this.width, this.height, false)
-    this.meter?.pause(600)
     this.composer?.setSize(this.width, this.height)
     this.composer?.setPixelRatio(this.renderer.getPixelRatio())
     this.camera.aspect = this.width / this.height
@@ -461,7 +420,7 @@ export class World {
     this.clock.update()
     const dt = Math.min(this.clock.getDelta(), 0.1)
     this.time += dt
-    this.meter.tick(dt * 1000)
+    this.guard.tick(dt * 1000)
 
     const target = this.readStory()
     this.story += (target - this.story) * (reducedMotion ? 1 : damp(7, dt))

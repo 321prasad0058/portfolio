@@ -138,16 +138,8 @@ html[data-nogl] body {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain 0.9s steps(6) infinite;
 }
-/* lite pages (touch devices, slow devices): no animated grain layer over the whole screen, and no
-   background blur behind glass surfaces — both are re-drawn on every frame over the moving 3D scene.
-   Glass surfaces get a near-solid fill instead (set per surface, in each theme). */
-html[data-lite] .grain {
-  display: none;
-}
-html[data-lite] *,
-html[data-lite] *::before,
-html[data-lite] *::after {
-  backdrop-filter: none !important;
+html[data-perf='low'] .grain {
+  animation: none;
 }
 @keyframes grain {
   0% { transform: translate(0, 0); }
@@ -178,14 +170,4 @@ main {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
-}
-/* lite: the floating controls lose their blur, so they get a more solid fill to stay readable */
-html[data-lite]:not([data-theme='light']) :is(.nav, .term-btn, .theme-btn, .seg, .legend, .btn:not(.btn-solid, .btn-yt)) {
-  background: rgba(4, 8, 7, 0.86);
-}
-html[data-lite][data-theme='light'] :is(.nav, .term-btn, .theme-btn, .seg, .legend, .btn:not(.btn-solid, .btn-yt)) {
-  background: rgba(255, 250, 238, 0.92);
-}
-html[data-lite]:not([data-theme='light']) .term-wrap {
-  background: rgba(2, 4, 3, 0.82);
 }
