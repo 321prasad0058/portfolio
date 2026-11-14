@@ -6,7 +6,7 @@ import { damp, type Piece } from '../util'
 // Drag to spin it; it keeps the momentum.
 export type StackPiece = Piece & { drag(dx: number, dy: number): void }
 
-const COLORS: Pair[] = [C.green, C.cyan, C.violet, C.gold]
+const COLORS: Pair[] = [C.green, C.cyan, C.violet, C.gold, C.red]
 
 export function createStack(center: THREE.Vector3, groups: string[][]): StackPiece {
   const group = new THREE.Group()

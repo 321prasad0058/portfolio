@@ -43,7 +43,7 @@ function Count({ value, prefix = '', suffix = '', decimals = 0 }: { value: numbe
   )
 }
 
-const TONE: Record<string, string> = { Backend: 'g', Frontend: 'c', 'Agentic AI': 'v' }
+const TONE: Record<string, string> = { Backend: 'g', Frontend: 'c', 'Agentic AI': 'v', Product: 'y' }
 
 export function Hello() {
   return (
@@ -500,7 +500,7 @@ export function Origin() {
   )
 }
 
-const TONES = ['g', 'c', 'v', 'y']
+const TONES = ['g', 'c', 'v', 'y', 'r']
 
 export function Toolchain() {
   return (

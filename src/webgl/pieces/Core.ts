@@ -92,17 +92,19 @@ export function createCore(center: THREE.Vector3, count: number, pillars: string
   const heart = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(0.9, 1)), heartMat)
   group.add(heart)
 
-  // the three things I ship, orbiting
+  // the things I ship, orbiting (Product, the fourth, rides the outermost ring)
   const ringMat = flat(['#2ee6d6', '#ffffff'], 0.55)
   const orbits = pillars.map((p, i) => {
     const pivot = new THREE.Group()
-    pivot.rotation.set(Math.PI / 2 + (i - 1) * 0.42, (i - 1) * 0.5, (i - 1) * 0.2)
-    const r = 3.3 + i * 0.35
+    // the first three fan out evenly; Product crosses them on its own gentle tilt, so it stays inside the globe's frame
+    if (i < 3) pivot.rotation.set(Math.PI / 2 + (i - 1) * 0.42, (i - 1) * 0.5, (i - 1) * 0.2)
+    else pivot.rotation.set(Math.PI / 2 + 0.28, 0, -0.5)
+    const r = i < 3 ? 3.3 + i * 0.35 : 3.8
     const ring = new THREE.Mesh(new THREE.TorusGeometry(r, 0.008, 6, 200), ringMat)
     const holder = new THREE.Group()
     const node = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), flat(['#d9ffe4', '#c8553d']))
     node.position.x = r
-    const tag = label(p, { size: 46, height: 0.34, color: [['#39d353', '#2ee6d6', '#9b7bff'][i], ['#3b3226', '#3b3226', '#3b3226'][i]], bg: ['rgba(4,10,8,0.75)', 'rgba(255,250,238,0.9)'], weight: 700 })
+    const tag = label(p, { size: 46, height: 0.34, color: [['#39d353', '#2ee6d6', '#9b7bff', '#f5b84b'][i], '#3b3226'], bg: ['rgba(4,10,8,0.75)', 'rgba(255,250,238,0.9)'], weight: 700 })
     tag.position.set(r, 0.38, 0)
     holder.add(node, tag)
     pivot.add(ring, holder)

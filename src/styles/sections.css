@@ -598,6 +598,7 @@ html[data-perf='low'][data-theme='light'] .card {
 .tone-c { color: var(--cyan); }
 .tone-v { color: var(--violet); }
 .tone-y { color: var(--gold); }
+.tone-r { color: var(--coral); }
 .certs {
   display: grid;
   gap: 6px;
@@ -768,7 +769,8 @@ kbd {
 .tone-c { --tone: var(--cyan); }
 .tone-v { --tone: var(--violet); }
 .tone-y { --tone: var(--gold); }
-.label.tone-g, .label.tone-c, .label.tone-v, .label.tone-y { color: var(--tone); }
+.tone-r { --tone: var(--coral); }
+.label.tone-g, .label.tone-c, .label.tone-v, .label.tone-y, .label.tone-r { color: var(--tone); }
 
 .impact-strip {
   position: absolute;

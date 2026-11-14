@@ -14,7 +14,7 @@ export const profile = {
     leetcode: 'https://leetcode.com/u/Prasad_2472/',
     blog: 'https://prasadalai.hashnode.dev',
   },
-  roles: ['Backend systems', 'Frontend platforms', 'Agentic AI', 'Voice AI', 'Distributed systems'],
+  roles: ['Agentic AI', 'Product Management', 'Backend systems', 'Frontend platforms', 'Voice AI', 'Distributed systems'],
 }
 
 /** The headline numbers, all from production at FlexiLoans. */
@@ -41,6 +41,7 @@ export const pillars = [
   { name: 'Backend', tone: 'g', summary: 'Java, Node.js, Nest.js and Python services. REST APIs, webhooks, event-driven pipelines, Redis caching, MySQL and PostgreSQL on AWS.' },
   { name: 'Frontend', tone: 'c', summary: 'The Customer Journey Portal and its dashboard in Angular, React and Next.js: the screens business owners apply, sign and track their loans on.' },
   { name: 'Agentic AI', tone: 'v', summary: 'A SaaS workbench for deploying LLM agents, the Flexi-MCP server that connects them to core APIs, and Flexy, a real-time multilingual voice agent.' },
+  { name: 'Product', tone: 'y', summary: 'Thinking past the ticket: mapping the journeys borrowers and guarantors move through, reading the funnel numbers, and shaping flows like Credit Score and the one-prompt agent builder around what users actually do.' },
 ]
 
 export type System = {
@@ -293,6 +294,7 @@ export const stack = {
   Backend: ['Java 17+', 'Go', 'Node.js', 'Nest.js', 'Python', 'REST APIs', 'Microservices', 'Kafka', 'Redis', 'PostgreSQL', 'MySQL'],
   Frontend: ['TypeScript', 'JavaScript', 'React', 'Next.js', 'Angular', 'Tailwind CSS', 'Three.js', 'GSAP'],
   'Agentic AI': ['MCP servers', 'LLM agents', 'Voice AI', 'Gemini', 'Groq', 'Whisper', 'Guardrails'],
+  Product: ['User journeys', 'UX research', 'Figma', 'Funnel analytics', 'Google Analytics 4', 'PRDs', 'Roadmapping'],
   'Platform & Practice': ['AWS', 'Docker', 'OpenTelemetry', 'CI/CD', 'Git', 'Linux', 'Jest', 'JUnit', 'TDD', 'System Design'],
 }
 
